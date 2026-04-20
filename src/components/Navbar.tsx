@@ -42,30 +42,32 @@ const Navbar = () => {
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-gray-100 safe-area-top">
-      <div className="flex items-center justify-between h-14 px-4">
-        {/* 左侧 - 返回按钮或logo */}
-        <div className="flex items-center">
+      <div className="flex items-center h-14 px-4">
+        {/* 左侧 - 返回按钮或居中显示的内容 */}
+        <div className="flex items-center flex-1 justify-center">
           {!isTabbarPage ? (
-            <button
-              onClick={() => navigate(-1)}
-              className="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors"
-            >
-              <ArrowLeft className="h-5 w-5 text-gray-700" />
-            </button>
-          ) : (
+            <div className="w-full flex items-center">
+              <button
+                onClick={() => navigate(-1)}
+                className="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors"
+              >
+                <ArrowLeft className="h-5 w-5 text-gray-700" />
+              </button>
+            </div>
+          ) : isHomePage ? (
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <div className="w-4 h-4 bg-white rounded-sm"></div>
               </div>
               <h1 className="text-lg font-bold text-gray-900">提示词分享</h1>
             </div>
+          ) : (
+            <h1 className="text-lg font-bold text-gray-900">{getPageTitle()}</h1>
           )}
         </div>
 
-
-
         {/* 右侧 - 操作按钮 */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 absolute right-4">
           {isHomePage && (
             <>
               <button
