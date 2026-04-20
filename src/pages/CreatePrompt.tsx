@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Camera, Image as ImageIcon } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 
 // Mock data for categories
@@ -18,8 +19,10 @@ const CreatePrompt = () => {
     description: '',
     content: '',
     category_id: '',
-    tags: ''
+    tags: '',
+    image: null
   })
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -31,6 +34,33 @@ const CreatePrompt = () => {
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }))
     }
+  }
+
+  // Handle image upload
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      // 这里可以添加文件类型验证
+      if (!file.type.startsWith('image/')) {
+        alert('请上传图片文件')
+        return
+      }
+      
+      // 生成预览
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        setImagePreview(event.target?.result as string)
+      }
+      reader.readAsDataURL(file)
+      
+      setFormData(prev => ({ ...prev, image: file }))
+    }
+  }
+
+  // Remove image
+  const removeImage = () => {
+    setFormData(prev => ({ ...prev, image: null }))
+    setImagePreview(null)
   }
 
   // Validate form
@@ -154,7 +184,7 @@ const CreatePrompt = () => {
           </div>
 
           {/* Tags */}
-          <div className="mb-6">
+          <div className="mb-5">
             <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-2">
               标签（用逗号分隔）
             </label>
@@ -167,6 +197,54 @@ const CreatePrompt = () => {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
               placeholder="例如：肖像, 逼真, 艺术"
             />
+          </div>
+
+          {/* Image upload */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              上传效果图（可选）
+            </label>
+            {imagePreview ? (
+              <div className="relative w-full h-40 mb-3">
+                <img 
+                  src={imagePreview} 
+                  alt="预览" 
+                  className="w-full h-full object-cover rounded-lg"
+                />
+                <button
+                  type="button"
+                  onClick={removeImage}
+                  className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                <label className="flex flex-col items-center justify-center w-full h-full cursor-pointer">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <Camera className="h-10 w-10 text-gray-400 mb-3" />
+                    <p className="mb-2 text-sm text-gray-600">
+                      <span className="font-medium text-indigo-600 hover:text-indigo-500">
+                        点击上传图片
+                      </span>
+                      或拖拽文件到此处
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      支持 JPG, PNG, GIF 格式，最大 10MB
+                    </p>
+                  </div>
+                </label>
+              </div>
+            )}
           </div>
 
           {/* Submit button */}
