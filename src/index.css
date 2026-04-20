@@ -11,4 +11,38 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* 移动端安全区域适配 */
+  --safe-area-inset-top: env(safe-area-inset-top);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom);
+}
+
+/* 移动端安全区域适配 */
+.safe-area-top {
+  padding-top: var(--safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+
+/* 禁用移动端双击缩放 */
+body {
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* 防止文字选择闪烁 */
+* {
+  user-select: none;
+}
+
+input, textarea {
+  user-select: text;
+}
+
+/* 优化移动端滚动体验 */
+* {
+  -webkit-overflow-scrolling: touch;
 }
