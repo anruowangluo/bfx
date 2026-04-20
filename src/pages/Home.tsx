@@ -118,7 +118,7 @@ const Home = () => {
         <div className="flex space-x-3">
           <button
             onClick={() => setSelectedCategory('all')}
-            className={`px-4 py-2.5 rounded-full text-sm font-medium transition-all ${selectedCategory === 'all' ? 'bg-indigo-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+            className={`px-4 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap ${selectedCategory === 'all' ? 'bg-indigo-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
           >
             全部
           </button>
