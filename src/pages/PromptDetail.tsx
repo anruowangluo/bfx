@@ -56,47 +56,61 @@ const PromptDetail = () => {
 
   // Copy prompt content to clipboard
   const handleCopy = async () => {
+    // 直接使用降级方案，因为现代剪贴板 API 在很多环境中被阻止
     try {
-      // 尝试使用现代剪贴板 API
-      await navigator.clipboard.writeText(prompt.content)
-      setShowCopiedMessage(true)
-      setTimeout(() => setShowCopiedMessage(false), 2000)
+      const textArea = document.createElement('textarea')
+      textArea.value = prompt.content
+      textArea.style.position = 'fixed'
+      textArea.style.left = '-999999px'
+      textArea.style.top = '-999999px'
+      textArea.style.fontSize = '16px' // 确保文本被正确选择
+      textArea.style.border = 'none'
+      textArea.style.outline = 'none'
+      textArea.style.background = 'transparent'
+      document.body.appendChild(textArea)
+      
+      // 确保元素被正确添加到DOM
+      setTimeout(() => {
+        try {
+          // 尝试不同的选择方法
+          textArea.focus()
+          textArea.select()
+          
+          // 对于移动设备，使用不同的选择方法
+          if (document.selection) {
+            document.selection.createRange().selectNodeContents(textArea)
+          } else {
+            textArea.setSelectionRange(0, textArea.value.length)
+          }
+          
+          // 执行复制命令
+          const successful = document.execCommand('copy')
+          
+          if (successful) {
+            setShowCopiedMessage(true)
+            setTimeout(() => setShowCopiedMessage(false), 2000)
+          } else {
+            // 如果复制失败，显示提示信息
+            alert('复制失败，请手动选择并复制内容')
+          }
+        } catch (err) {
+          console.error('复制失败:', err)
+          // 所有方法都失败时，显示提示信息
+          alert('复制失败，请手动选择并复制内容')
+        } finally {
+          // 确保移除临时元素
+          setTimeout(() => {
+            const textArea = document.querySelector('textarea[style*="-999999px"]')
+            if (textArea) {
+              document.body.removeChild(textArea)
+            }
+          }, 100)
+        }
+      }, 10)
     } catch (error) {
       console.error('复制失败:', error)
-      try {
-        // 降级方案：使用传统的复制方法
-        const textArea = document.createElement('textarea')
-        textArea.value = prompt.content
-        textArea.style.position = 'fixed'
-        textArea.style.left = '-999999px'
-        textArea.style.top = '-999999px'
-        document.body.appendChild(textArea)
-        
-        // 尝试不同的选择方法
-        textArea.focus()
-        textArea.select()
-        
-        // 执行复制命令
-        const successful = document.execCommand('copy')
-        
-        if (successful) {
-          setShowCopiedMessage(true)
-          setTimeout(() => setShowCopiedMessage(false), 2000)
-        } else {
-          // 如果复制失败，显示提示信息
-          alert('复制失败，请手动选择并复制内容')
-        }
-      } catch (err) {
-        console.error('降级复制失败:', err)
-        // 所有方法都失败时，显示提示信息
-        alert('复制失败，请手动选择并复制内容')
-      } finally {
-        // 确保移除临时元素
-        const textArea = document.querySelector('textarea[style*="-999999px"]')
-        if (textArea) {
-          document.body.removeChild(textArea)
-        }
-      }
+      // 所有方法都失败时，显示提示信息
+      alert('复制失败，请手动选择并复制内容')
     }
   }
 
