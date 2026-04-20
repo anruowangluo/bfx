@@ -104,10 +104,6 @@ const PromptDetail = () => {
 
       {/* Prompt content */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
-        <div
-          className="h-2"
-          style={{ backgroundColor: prompt.category_color }}
-        />
         <div className="p-5">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
