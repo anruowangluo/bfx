@@ -131,30 +131,30 @@ const Profile = () => {
           {activeTab === 'created' && (
             <div>
               {createdPrompts.length > 0 ? (
-                <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-3">
                   {createdPrompts.map(prompt => (
                     <Link
                       key={prompt.id}
                       to={`/prompt/${prompt.id}`}
                       className="block group"
                     >
-                      <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 transition-all duration-300 group-hover:shadow-md group-hover:-translate-y-1">
-                        <div className="flex items-center justify-between mb-3">
+                      <div className="bg-gray-50 rounded-xl p-3 border border-gray-100 transition-all duration-300 group-hover:shadow-md group-hover:-translate-y-1 h-full">
+                        <div className="flex items-center justify-between mb-2">
                           <span
-                            className="px-3 py-1 rounded-full text-xs font-medium"
+                            className="px-2 py-0.5 rounded-full text-xs font-medium"
                             style={{ backgroundColor: `${prompt.category_color}20`, color: prompt.category_color }}
                           >
                             {prompt.category_name}
                           </span>
-                          <div className="flex items-center text-gray-500 text-sm">
-                            <span className="mr-3">❤️ {prompt.likes_count}</span>
+                          <div className="flex items-center text-gray-500 text-xs">
+                            <span className="mr-1.5">❤️ {prompt.likes_count}</span>
                             <span>💾 {prompt.saves_count}</span>
                           </div>
                         </div>
-                        <h3 className="text-lg font-bold mb-2 group-hover:text-indigo-600 transition-colors">
+                        <h3 className="text-sm font-bold mb-1.5 group-hover:text-indigo-600 transition-colors line-clamp-1">
                           {prompt.title}
                         </h3>
-                        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                        <p className="text-gray-600 text-xs mb-2 line-clamp-2">
                           {prompt.description}
                         </p>
                         <p className="text-xs text-gray-500">
@@ -187,30 +187,30 @@ const Profile = () => {
           {activeTab === 'saved' && (
             <div>
               {savedPrompts.length > 0 ? (
-                <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-3">
                   {savedPrompts.map(prompt => (
                     <Link
                       key={prompt.id}
                       to={`/prompt/${prompt.id}`}
                       className="block group"
                     >
-                      <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 transition-all duration-300 group-hover:shadow-md group-hover:-translate-y-1">
-                        <div className="flex items-center justify-between mb-3">
+                      <div className="bg-gray-50 rounded-xl p-3 border border-gray-100 transition-all duration-300 group-hover:shadow-md group-hover:-translate-y-1 h-full">
+                        <div className="flex items-center justify-between mb-2">
                           <span
-                            className="px-3 py-1 rounded-full text-xs font-medium"
+                            className="px-2 py-0.5 rounded-full text-xs font-medium"
                             style={{ backgroundColor: `${prompt.category_color}20`, color: prompt.category_color }}
                           >
                             {prompt.category_name}
                           </span>
-                          <div className="flex items-center text-gray-500 text-sm">
-                            <span className="mr-3">❤️ {prompt.likes_count}</span>
+                          <div className="flex items-center text-gray-500 text-xs">
+                            <span className="mr-1.5">❤️ {prompt.likes_count}</span>
                             <span>💾 {prompt.saves_count}</span>
                           </div>
                         </div>
-                        <h3 className="text-lg font-bold mb-2 group-hover:text-indigo-600 transition-colors">
+                        <h3 className="text-sm font-bold mb-1.5 group-hover:text-indigo-600 transition-colors line-clamp-1">
                           {prompt.title}
                         </h3>
-                        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                        <p className="text-gray-600 text-xs mb-2 line-clamp-2">
                           {prompt.description}
                         </p>
                         <p className="text-xs text-gray-500">
