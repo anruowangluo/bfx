@@ -108,7 +108,7 @@ const CreatePrompt = () => {
           {/* Title */}
           <div className="mb-5">
             <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-              标题
+              标题 <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -143,7 +143,7 @@ const CreatePrompt = () => {
           {/* Content */}
           <div className="mb-5">
             <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
-              提示词内容
+              提示词内容 <span className="text-red-500">*</span>
             </label>
             <textarea
               id="content"
@@ -210,7 +210,7 @@ const CreatePrompt = () => {
           {/* Category */}
           <div className="mb-5">
             <label htmlFor="category_id" className="block text-sm font-medium text-gray-700 mb-2">
-              分类
+              分类 <span className="text-red-500">*</span>
             </label>
             <select
               id="category_id"
