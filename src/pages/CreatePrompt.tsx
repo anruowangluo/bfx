@@ -159,48 +159,8 @@ const CreatePrompt = () => {
             )}
           </div>
 
-          {/* Category */}
-          <div className="mb-5">
-            <label htmlFor="category_id" className="block text-sm font-medium text-gray-700 mb-2">
-              分类
-            </label>
-            <select
-              id="category_id"
-              name="category_id"
-              value={formData.category_id}
-              onChange={handleChange}
-              className={`w-full px-4 py-3 border ${errors.category_id ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors`}
-            >
-              <option value="">请选择分类</option>
-              {mockCategories.map(category => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-            {errors.category_id && (
-              <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.category_id}</p>
-            )}
-          </div>
-
-          {/* Tags */}
-          <div className="mb-5">
-            <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-2">
-              标签（用逗号分隔）
-            </label>
-            <input
-              type="text"
-              id="tags"
-              name="tags"
-              value={formData.tags}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
-              placeholder="例如：肖像, 逼真, 艺术"
-            />
-          </div>
-
           {/* Image upload */}
-          <div className="mb-6">
+          <div className="mb-5">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               上传效果图（可选）
             </label>
@@ -245,6 +205,46 @@ const CreatePrompt = () => {
                 </label>
               </div>
             )}
+          </div>
+
+          {/* Category */}
+          <div className="mb-5">
+            <label htmlFor="category_id" className="block text-sm font-medium text-gray-700 mb-2">
+              分类
+            </label>
+            <select
+              id="category_id"
+              name="category_id"
+              value={formData.category_id}
+              onChange={handleChange}
+              className={`w-full px-4 py-3 border ${errors.category_id ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors`}
+            >
+              <option value="">请选择分类</option>
+              {mockCategories.map(category => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+            {errors.category_id && (
+              <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.category_id}</p>
+            )}
+          </div>
+
+          {/* Tags */}
+          <div className="mb-6">
+            <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-2">
+              标签（用逗号分隔）
+            </label>
+            <input
+              type="text"
+              id="tags"
+              name="tags"
+              value={formData.tags}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+              placeholder="例如：肖像, 逼真, 艺术"
+            />
           </div>
 
           {/* Submit button */}
