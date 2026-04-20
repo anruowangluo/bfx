@@ -129,7 +129,7 @@ const PromptDetail = () => {
           <p className="text-gray-600 mb-5">{prompt.description}</p>
 
           <div className="relative mb-5">
-            <pre className="bg-gray-50 p-4 rounded-lg overflow-x-auto text-sm">
+            <pre className="bg-gray-50 p-4 rounded-lg text-sm whitespace-pre-wrap">
               <code>{prompt.content}</code>
             </pre>
             <button
