@@ -56,9 +56,31 @@ const PromptDetail = () => {
 
   // Copy prompt content to clipboard
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(prompt.content)
-    setShowCopiedMessage(true)
-    setTimeout(() => setShowCopiedMessage(false), 2000)
+    try {
+      await navigator.clipboard.writeText(prompt.content)
+      setShowCopiedMessage(true)
+      setTimeout(() => setShowCopiedMessage(false), 2000)
+    } catch (error) {
+      console.error('复制失败:', error)
+      // 降级方案：使用传统的复制方法
+      const textArea = document.createElement('textarea')
+      textArea.value = prompt.content
+      textArea.style.position = 'fixed'
+      textArea.style.left = '-999999px'
+      textArea.style.top = '-999999px'
+      document.body.appendChild(textArea)
+      textArea.focus()
+      textArea.select()
+      try {
+        document.execCommand('copy')
+        setShowCopiedMessage(true)
+        setTimeout(() => setShowCopiedMessage(false), 2000)
+      } catch (err) {
+        console.error('降级复制失败:', err)
+      } finally {
+        document.body.removeChild(textArea)
+      }
+    }
   }
 
   // Handle like prompt
