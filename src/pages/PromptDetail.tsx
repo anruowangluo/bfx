@@ -185,22 +185,7 @@ const PromptDetail = () => {
         </div>
       </div>
 
-      {/* Usage examples */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
-        <div className="p-5">
-          <h2 className="text-lg font-bold mb-4">使用示例</h2>
-          <div className="space-y-4">
-            <div className="border-l-4 border-indigo-500 pl-4 py-2">
-              <h3 className="font-medium mb-2">示例 1：油画风格</h3>
-              <p className="text-gray-600">创建一幅 30 岁女性的逼真肖像，棕色头发，绿色眼睛。肖像应该采用油画风格，搭配自然光。</p>
-            </div>
-            <div className="border-l-4 border-indigo-500 pl-4 py-2">
-              <h3 className="font-medium mb-2">示例 2：数字艺术风格</h3>
-              <p className="text-gray-600">创建一幅 25 岁男性的逼真肖像，黑色头发，蓝色眼睛。肖像应该采用数字艺术风格，搭配工作室光。</p>
-            </div>
-          </div>
-        </div>
-      </div>
+
 
       {/* Comments */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
