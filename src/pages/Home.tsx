@@ -143,12 +143,14 @@ const Home = () => {
       const savedPosition = sessionStorage.getItem('homeScrollPosition')
       const position = savedPosition ? parseInt(savedPosition, 10) : 0
       
-      // 使用setTimeout确保DOM已经完全更新，增加延迟时间以确保所有组件都已渲染
-      setTimeout(() => {
-        if (scrollRef.current) {
-          scrollRef.current.scrollTop = position
-        }
-      }, 200)
+      // 直接设置滚动位置，不使用动画效果
+      if (scrollRef.current) {
+        // 禁用滚动动画
+        scrollRef.current.scrollTo({
+          top: position,
+          behavior: 'instant'
+        })
+      }
     }
   }, [location.pathname])
 
