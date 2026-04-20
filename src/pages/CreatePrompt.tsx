@@ -71,13 +71,13 @@ const CreatePrompt = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-6">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6">创建新提示词</h1>
-        <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <h1 className="text-xl font-bold mb-6">创建新提示词</h1>
+        <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
           {/* Title */}
-          <div className="mb-4">
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="mb-5">
+            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
               标题
             </label>
             <input
@@ -86,17 +86,17 @@ const CreatePrompt = () => {
               name="title"
               value={formData.title}
               onChange={handleChange}
-              className={`w-full px-3 py-2 border ${errors.title ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
+              className={`w-full px-4 py-3 border ${errors.title ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors`}
               placeholder="请输入提示词标题"
             />
             {errors.title && (
-              <p className="mt-1 text-sm text-red-600">{errors.title}</p>
+              <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.title}</p>
             )}
           </div>
 
           {/* Description */}
-          <div className="mb-4">
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="mb-5">
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
               描述
             </label>
             <textarea
@@ -104,15 +104,15 @@ const CreatePrompt = () => {
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              rows={3}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+              rows={4}
               placeholder="描述您的提示词功能"
             />
           </div>
 
           {/* Content */}
-          <div className="mb-4">
-            <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="mb-5">
+            <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
               提示词内容
             </label>
             <textarea
@@ -120,18 +120,18 @@ const CreatePrompt = () => {
               name="content"
               value={formData.content}
               onChange={handleChange}
-              className={`w-full px-3 py-2 border ${errors.content ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
+              className={`w-full px-4 py-3 border ${errors.content ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors`}
               rows={6}
               placeholder="在此编写您的提示词。使用 [占位符] 表示变量。"
             />
             {errors.content && (
-              <p className="mt-1 text-sm text-red-600">{errors.content}</p>
+              <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.content}</p>
             )}
           </div>
 
           {/* Category */}
-          <div className="mb-4">
-            <label htmlFor="category_id" className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="mb-5">
+            <label htmlFor="category_id" className="block text-sm font-medium text-gray-700 mb-2">
               分类
             </label>
             <select
@@ -139,7 +139,7 @@ const CreatePrompt = () => {
               name="category_id"
               value={formData.category_id}
               onChange={handleChange}
-              className={`w-full px-3 py-2 border ${errors.category_id ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
+              className={`w-full px-4 py-3 border ${errors.category_id ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors`}
             >
               <option value="">请选择分类</option>
               {mockCategories.map(category => (
@@ -149,13 +149,13 @@ const CreatePrompt = () => {
               ))}
             </select>
             {errors.category_id && (
-              <p className="mt-1 text-sm text-red-600">{errors.category_id}</p>
+              <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.category_id}</p>
             )}
           </div>
 
           {/* Tags */}
           <div className="mb-6">
-            <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-2">
               标签（用逗号分隔）
             </label>
             <input
@@ -164,23 +164,23 @@ const CreatePrompt = () => {
               name="tags"
               value={formData.tags}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
               placeholder="例如：肖像, 逼真, 艺术"
             />
           </div>
 
           {/* Submit button */}
-          <div className="flex justify-end">
+          <div className="flex space-x-3">
             <button
               type="button"
               onClick={() => navigate('/')}
-              className="px-4 py-2 mr-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+              className="flex-1 px-4 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-medium"
             >
               取消
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              className="flex-1 px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
               disabled={isSubmitting}
             >
               {isSubmitting ? '创建中...' : '创建提示词'}

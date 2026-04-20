@@ -99,23 +99,23 @@ const PromptDetail = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-6">
       {/* Back button */}
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-gray-600 hover:text-indigo-600 mb-6"
+        className="flex items-center gap-2 text-gray-600 hover:text-indigo-600 mb-6 p-2 rounded-full hover:bg-gray-100 transition-colors"
       >
         <ArrowLeft className="h-5 w-5" />
-        返回提示词列表
+        <span>返回</span>
       </button>
 
       {/* Prompt content */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
         <div
           className="h-2"
           style={{ backgroundColor: prompt.category_color }}
         />
-        <div className="p-6">
+        <div className="p-5">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <img
@@ -136,10 +136,10 @@ const PromptDetail = () => {
             </span>
           </div>
 
-          <h1 className="text-2xl font-bold mb-2">{prompt.title}</h1>
-          <p className="text-gray-600 mb-6">{prompt.description}</p>
+          <h1 className="text-xl font-bold mb-3">{prompt.title}</h1>
+          <p className="text-gray-600 mb-5">{prompt.description}</p>
 
-          <div className="relative mb-6">
+          <div className="relative mb-5">
             <pre className="bg-gray-50 p-4 rounded-lg overflow-x-auto text-sm">
               <code>{prompt.content}</code>
             </pre>
@@ -148,48 +148,48 @@ const PromptDetail = () => {
               className="absolute top-2 right-2 p-2 bg-white rounded-md shadow-sm hover:bg-gray-100 transition-colors"
               title="复制到剪贴板"
             >
-              <Copy className="h-4 w-4 text-gray-600" />
+              <Copy className="h-5 w-5 text-gray-600" />
             </button>
             {showCopiedMessage && (
-              <div className="absolute top-2 right-10 bg-green-100 text-green-800 px-2 py-1 rounded text-xs">
+              <div className="absolute top-2 right-12 bg-green-100 text-green-800 px-3 py-1 rounded text-xs font-medium">
                 已复制！
               </div>
             )}
           </div>
 
-          <div className="flex flex-wrap gap-2 mb-6">
+          <div className="flex flex-wrap gap-2 mb-5">
             {prompt.tags.map((tag, index) => (
               <span
                 key={index}
-                className="px-2 py-1 bg-gray-100 rounded-full text-xs text-gray-600"
+                className="px-3 py-1.5 bg-gray-100 rounded-full text-xs text-gray-600"
               >
                 {tag}
               </span>
             ))}
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+          <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+            <div className="flex items-center gap-3">
               <button
                 onClick={handleLike}
-                className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${isLiked ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-colors ${isLiked ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
               >
-                <Heart className={`h-4 w-4 ${isLiked ? 'fill-red-500' : ''}`} />
+                <Heart className={`h-5 w-5 ${isLiked ? 'fill-red-500' : ''}`} />
                 {isLiked ? prompt.likes_count + 1 : prompt.likes_count}
               </button>
               <button
                 onClick={handleSave}
-                className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${isSaved ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-colors ${isSaved ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
               >
-                <Save className={`h-4 w-4 ${isSaved ? 'fill-indigo-500' : ''}`} />
+                <Save className={`h-5 w-5 ${isSaved ? 'fill-indigo-500' : ''}`} />
                 {isSaved ? prompt.saves_count + 1 : prompt.saves_count}
               </button>
             </div>
             <button
               onClick={handleShare}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
             >
-              <Share2 className="h-4 w-4" />
+              <Share2 className="h-5 w-5" />
               分享
             </button>
           </div>
@@ -197,15 +197,15 @@ const PromptDetail = () => {
       </div>
 
       {/* Usage examples */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
-        <div className="p-6">
-          <h2 className="text-xl font-bold mb-4">使用示例</h2>
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+        <div className="p-5">
+          <h2 className="text-lg font-bold mb-4">使用示例</h2>
           <div className="space-y-4">
-            <div className="border-l-4 border-indigo-500 pl-4 py-1">
+            <div className="border-l-4 border-indigo-500 pl-4 py-2">
               <h3 className="font-medium mb-2">示例 1：油画风格</h3>
               <p className="text-gray-600">创建一幅 30 岁女性的逼真肖像，棕色头发，绿色眼睛。肖像应该采用油画风格，搭配自然光。</p>
             </div>
-            <div className="border-l-4 border-indigo-500 pl-4 py-1">
+            <div className="border-l-4 border-indigo-500 pl-4 py-2">
               <h3 className="font-medium mb-2">示例 2：数字艺术风格</h3>
               <p className="text-gray-600">创建一幅 25 岁男性的逼真肖像，黑色头发，蓝色眼睛。肖像应该采用数字艺术风格，搭配工作室光。</p>
             </div>
@@ -215,8 +215,8 @@ const PromptDetail = () => {
 
       {/* Comments */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="p-6">
-          <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+        <div className="p-5">
+          <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
             <MessageCircle className="h-5 w-5" />
             评论 ({comments.length})
           </h2>
@@ -227,13 +227,13 @@ const PromptDetail = () => {
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
               placeholder="添加您的评论..."
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              rows={3}
+              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              rows={4}
             />
-            <div className="mt-2 flex justify-end">
+            <div className="mt-3 flex justify-end">
               <button
                 type="submit"
-                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                className="px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
                 disabled={!commentText.trim()}
               >
                 发表评论
@@ -242,20 +242,20 @@ const PromptDetail = () => {
           </form>
 
           {/* Comments list */}
-          <div className="space-y-4">
+          <div className="space-y-5">
             {comments.map(comment => (
               <div key={comment.id} className="flex gap-3">
                 <img
                   src={comment.author_avatar}
                   alt={comment.author_name}
-                  className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+                  className="w-12 h-12 rounded-full object-cover flex-shrink-0"
                 />
                 <div className="flex-grow">
                   <div className="flex items-center justify-between mb-1">
                     <h4 className="font-medium">{comment.author_name}</h4>
                     <span className="text-xs text-gray-500">{new Date(comment.created_at).toLocaleDateString()}</span>
                   </div>
-                  <p className="text-gray-600 text-sm">{comment.content}</p>
+                  <p className="text-gray-600">{comment.content}</p>
                 </div>
               </div>
             ))}

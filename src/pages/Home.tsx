@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { Search } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 
 // Mock data for prompts
@@ -106,37 +107,25 @@ const Home = () => {
   })
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-6">
       {/* Search Bar */}
-      <div className="relative mb-8">
+      <div className="relative mb-6">
         <input
           type="text"
           placeholder="搜索提示词..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          className="w-full pl-12 pr-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm"
         />
-        <svg
-          className="absolute left-3 top-3.5 h-5 w-5 text-gray-400"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          />
-        </svg>
+        <Search className="absolute left-4 top-3.5 h-5 w-5 text-gray-400" />
       </div>
 
       {/* Categories */}
-      <div className="mb-8 overflow-x-auto">
-        <div className="flex space-x-2 pb-2">
+      <div className="mb-6 overflow-x-auto pb-2 -mx-4 px-4">
+        <div className="flex space-x-3">
           <button
             onClick={() => setSelectedCategory('all')}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedCategory === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+            className={`px-4 py-2.5 rounded-full text-sm font-medium transition-all ${selectedCategory === 'all' ? 'bg-indigo-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
           >
             全部
           </button>
@@ -144,7 +133,7 @@ const Home = () => {
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedCategory === category.id ? 'text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+              className={`px-4 py-2.5 rounded-full text-sm font-medium transition-all ${selectedCategory === category.id ? 'text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
               style={{ backgroundColor: selectedCategory === category.id ? category.color : 'transparent' }}
             >
               {category.name}
@@ -153,20 +142,20 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Prompts Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Prompts List */}
+      <div className="space-y-4">
         {filteredPrompts.map(prompt => (
           <Link
             key={prompt.id}
             to={`/prompt/${prompt.id}`}
             className="block group"
           >
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 group-hover:shadow-md">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 group-hover:shadow-md group-hover:-translate-y-1">
               <div
                 className="h-2"
                 style={{ backgroundColor: prompt.category_color }}
               />
-              <div className="p-6">
+              <div className="p-5">
                 <div className="flex items-center mb-3">
                   <span
                     className="px-3 py-1 rounded-full text-xs font-medium"
@@ -179,13 +168,13 @@ const Home = () => {
                     <span>💾 {prompt.saves_count}</span>
                   </div>
                 </div>
-                <h3 className="text-xl font-bold mb-2 group-hover:text-indigo-600 transition-colors">
+                <h3 className="text-lg font-bold mb-2 group-hover:text-indigo-600 transition-colors">
                   {prompt.title}
                 </h3>
-                <p className="text-gray-600 mb-4 line-clamp-2">
+                <p className="text-gray-600 mb-3 line-clamp-2">
                   {prompt.description}
                 </p>
-                <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex flex-wrap gap-2 mb-3">
                   {prompt.tags.slice(0, 3).map((tag, index) => (
                     <span
                       key={index}
@@ -213,8 +202,12 @@ const Home = () => {
 
       {/* No results message */}
       {filteredPrompts.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">未找到提示词。请尝试其他搜索或分类。</p>
+        <div className="text-center py-16">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
+            <Search className="h-8 w-8 text-gray-400" />
+          </div>
+          <p className="text-gray-500 mb-4">未找到提示词</p>
+          <p className="text-gray-400 text-sm">请尝试其他搜索或分类</p>
         </div>
       )}
     </div>
