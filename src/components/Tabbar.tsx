@@ -24,6 +24,14 @@ const Tabbar = () => {
     }
   ]
 
+  // 检查是否是提示词详情页面
+  const isPromptDetailPage = location.pathname.startsWith('/prompt')
+  
+  // 在提示词详情页面不显示Tabbar
+  if (isPromptDetailPage) {
+    return null
+  }
+
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 safe-area-bottom">
       <div className="flex items-center justify-around h-16 max-w-md mx-auto">
