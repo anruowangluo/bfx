@@ -150,22 +150,25 @@ const PromptDetail = () => {
           <h1 className="text-xl font-bold mb-3">{prompt.title}</h1>
           <p className="text-gray-600 mb-5">{prompt.description}</p>
 
-          <div className="relative mb-5">
+          <div className="mb-5">
+            <div className="flex justify-end mb-2">
+              <button
+                onClick={handleCopy}
+                className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-md shadow-sm hover:bg-gray-100 transition-colors text-sm"
+                title="复制到剪贴板"
+              >
+                <Copy className="h-4 w-4 text-gray-600" />
+                <span>复制内容</span>
+              </button>
+              {showCopiedMessage && (
+                <div className="ml-2 px-3 py-1.5 bg-green-100 text-green-800 rounded text-xs font-medium flex items-center">
+                  已复制！
+                </div>
+              )}
+            </div>
             <pre className="bg-gray-50 p-4 rounded-lg text-sm whitespace-pre-wrap">
               <code>{prompt.content}</code>
             </pre>
-            <button
-              onClick={handleCopy}
-              className="absolute top-2 right-2 p-2 bg-white rounded-md shadow-sm hover:bg-gray-100 transition-colors"
-              title="复制到剪贴板"
-            >
-              <Copy className="h-5 w-5 text-gray-600" />
-            </button>
-            {showCopiedMessage && (
-              <div className="absolute top-2 right-12 bg-green-100 text-green-800 px-3 py-1 rounded text-xs font-medium">
-                已复制！
-              </div>
-            )}
           </div>
 
           <div className="flex flex-wrap gap-2 mb-5">
