@@ -136,16 +136,16 @@ const Home = () => {
       </div>
 
       {/* Prompts List */}
-      <div className="space-y-3">
+      <div className="grid grid-cols-2 gap-3">
         {filteredPrompts.map((prompt) => (
           <Link
             key={prompt.id}
             to={`/prompt/${prompt.id}`}
             className="block group"
           >
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-200 active:scale-[0.98]">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-200 active:scale-[0.98] h-full flex flex-col">
               {prompt.image && (
-                <div className="w-full h-40 overflow-hidden">
+                <div className="w-full h-32 overflow-hidden">
                   <img 
                     src={prompt.image} 
                     alt={prompt.title} 
@@ -153,44 +153,42 @@ const Home = () => {
                   />
                 </div>
               )}
-              <div className="p-4">
+              <div className="p-3 flex-grow">
                 <div className="flex items-center mb-2">
                   <span
-                    className="px-2.5 py-1 rounded-full text-xs font-medium"
+                    className="px-2 py-0.5 rounded-full text-xs font-medium"
                     style={{ backgroundColor: `${prompt.category_color}20`, color: prompt.category_color }}
                   >
                     {prompt.category_name}
                   </span>
-                  <div className="ml-auto flex items-center text-gray-500 text-sm">
-                    <span className="mr-2.5">❤️ {prompt.likes_count}</span>
+                  <div className="ml-auto flex items-center text-gray-500 text-xs">
+                    <span className="mr-1.5">❤️ {prompt.likes_count}</span>
                     <span>💾 {prompt.saves_count}</span>
                   </div>
                 </div>
-                <h3 className="text-base font-bold mb-1.5 group-hover:text-indigo-600 transition-colors">
+                <h3 className="text-sm font-bold mb-1 group-hover:text-indigo-600 transition-colors line-clamp-1">
                   {prompt.title}
                 </h3>
-                <p className="text-gray-600 mb-2.5 line-clamp-2 text-sm">
+                <p className="text-gray-600 mb-2 line-clamp-2 text-xs">
                   {prompt.description}
                 </p>
-                <div className="flex flex-wrap gap-1.5 mb-2">
-                  {prompt.tags.slice(0, 3).map((tag, index) => (
+                <div className="flex flex-wrap gap-1 mb-2">
+                  {prompt.tags.slice(0, 2).map((tag, index) => (
                     <span
                       key={index}
-                      className="px-2 py-0.5 bg-gray-100 rounded-full text-xs text-gray-600"
+                      className="px-1.5 py-0.5 bg-gray-100 rounded-full text-xs text-gray-600"
                     >
                       {tag}
                     </span>
                   ))}
-                  {prompt.tags.length > 3 && (
-                    <span className="px-2 py-0.5 bg-gray-100 rounded-full text-xs text-gray-600">
-                      +{prompt.tags.length - 3}
+                  {prompt.tags.length > 2 && (
+                    <span className="px-1.5 py-0.5 bg-gray-100 rounded-full text-xs text-gray-600">
+                      +{prompt.tags.length - 2}
                     </span>
                   )}
                 </div>
                 <div className="flex items-center text-xs text-gray-500">
-                  <span>作者：{prompt.author_name}</span>
-                  <span className="mx-1.5">•</span>
-                  <span>{new Date(prompt.created_at).toLocaleDateString()}</span>
+                  <span className="line-clamp-1">作者：{prompt.author_name}</span>
                 </div>
               </div>
             </div>
