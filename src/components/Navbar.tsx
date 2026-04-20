@@ -18,21 +18,21 @@ const Navbar = () => {
     <header className="sticky top-0 z-50 bg-white shadow-sm">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <Link to="/" className="text-2xl font-bold text-indigo-600">
-          PromptShare
+          提示词分享
         </Link>
 
         <div className="hidden md:flex items-center space-x-4">
           <div className="relative">
             <input
               type="text"
-              placeholder="Search prompts..."
+              placeholder="搜索提示词..."
               className="pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             />
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
           </div>
           <Link to="/create" className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors">
             <Plus className="h-4 w-4" />
-            Create
+            创建
           </Link>
           {isLoggedIn ? (
             <div className="flex items-center gap-4">
@@ -44,13 +44,13 @@ const Navbar = () => {
                 className="flex items-center gap-2 text-gray-600 hover:text-red-500"
               >
                 <LogOut className="h-5 w-5" />
-                Logout
+                退出登录
               </button>
             </div>
           ) : (
             <Link to="/login" className="flex items-center gap-2 text-gray-600 hover:text-indigo-600">
               <LogIn className="h-5 w-5" />
-              Login
+              登录
             </Link>
           )}
         </div>
@@ -70,7 +70,7 @@ const Navbar = () => {
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search prompts..."
+                placeholder="搜索提示词..."
                 className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
@@ -79,7 +79,7 @@ const Navbar = () => {
               to="/create"
               className="block w-full text-center px-4 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors"
             >
-              Create Prompt
+              创建提示词
             </Link>
             {isLoggedIn ? (
               <div className="space-y-2">
@@ -88,14 +88,14 @@ const Navbar = () => {
                   className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100"
                 >
                   <User className="h-5 w-5 text-gray-600" />
-                  Profile
+                  个人中心
                 </Link>
                 <button
                   onClick={handleLogout}
                   className="flex items-center gap-2 w-full px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-red-500"
                 >
                   <LogOut className="h-5 w-5" />
-                  Logout
+                  退出登录
                 </button>
               </div>
             ) : (
@@ -105,14 +105,14 @@ const Navbar = () => {
                   className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100"
                 >
                   <LogIn className="h-5 w-5 text-gray-600" />
-                  Login
+                  登录
                 </Link>
                 <Link
                   to="/register"
                   className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100"
                 >
                   <User className="h-5 w-5 text-gray-600" />
-                  Register
+                  注册
                 </Link>
               </div>
             )}

@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase'
 // Mock data for user
 const mockUser = {
   id: 'user1',
-  name: 'Current User',
+  name: '当前用户',
   email: 'user@example.com',
   avatar: 'https://via.placeholder.com/100'
 }
@@ -14,10 +14,10 @@ const mockUser = {
 const mockCreatedPrompts = [
   {
     id: '1',
-    title: 'Realistic Portraits',
-    description: 'Create realistic human portraits with detailed features',
+    title: '逼真肖像',
+    description: '创建具有细致特征的逼真人物肖像',
     category_id: '1',
-    category_name: 'Art',
+    category_name: '艺术',
     category_color: '#F43F5E',
     likes_count: 120,
     saves_count: 85,
@@ -25,10 +25,10 @@ const mockCreatedPrompts = [
   },
   {
     id: '2',
-    title: 'Blog Post Outline',
-    description: 'Generate outlines for engaging blog posts',
+    title: '博客文章大纲',
+    description: '生成吸引人的博客文章大纲',
     category_id: '2',
-    category_name: 'Writing',
+    category_name: '写作',
     category_color: '#6366F1',
     likes_count: 95,
     saves_count: 62,
@@ -40,10 +40,10 @@ const mockCreatedPrompts = [
 const mockSavedPrompts = [
   {
     id: '3',
-    title: 'JavaScript Debugger',
-    description: 'Debug JavaScript code and find errors',
+    title: 'JavaScript 调试器',
+    description: '调试 JavaScript 代码并查找错误',
     category_id: '3',
-    category_name: 'Coding',
+    category_name: '编程',
     category_color: '#10B981',
     likes_count: 150,
     saves_count: 110,
@@ -51,10 +51,10 @@ const mockSavedPrompts = [
   },
   {
     id: '4',
-    title: 'Logo Design',
-    description: 'Create professional logo designs',
+    title: 'Logo 设计',
+    description: '创建专业的 logo 设计',
     category_id: '4',
-    category_name: 'Design',
+    category_name: '设计',
     category_color: '#F59E0B',
     likes_count: 88,
     saves_count: 55,
@@ -62,10 +62,10 @@ const mockSavedPrompts = [
   },
   {
     id: '5',
-    title: 'Business Plan',
-    description: 'Create comprehensive business plans',
+    title: '商业计划书',
+    description: '创建全面的商业计划书',
     category_id: '5',
-    category_name: 'Business',
+    category_name: '商业',
     category_color: '#8B5CF6',
     likes_count: 135,
     saves_count: 98,
@@ -97,11 +97,11 @@ const Profile = () => {
             <div className="flex justify-center md:justify-start gap-4">
               <div className="text-center">
                 <p className="text-xl font-bold">{createdPrompts.length}</p>
-                <p className="text-sm text-gray-600">Prompts</p>
+                <p className="text-sm text-gray-600">提示词</p>
               </div>
               <div className="text-center">
                 <p className="text-xl font-bold">{savedPrompts.length}</p>
-                <p className="text-sm text-gray-600">Saved</p>
+                <p className="text-sm text-gray-600">已收藏</p>
               </div>
             </div>
           </div>
@@ -115,13 +115,13 @@ const Profile = () => {
             onClick={() => setActiveTab('created')}
             className={`flex-1 py-4 text-center font-medium transition-colors ${activeTab === 'created' ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-gray-600 hover:text-gray-900'}`}
           >
-            Created Prompts
+            创建的提示词
           </button>
           <button
             onClick={() => setActiveTab('saved')}
             className={`flex-1 py-4 text-center font-medium transition-colors ${activeTab === 'saved' ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-gray-600 hover:text-gray-900'}`}
           >
-            Saved Prompts
+            收藏的提示词
           </button>
         </div>
 
@@ -158,7 +158,7 @@ const Profile = () => {
                           {prompt.description}
                         </p>
                         <p className="text-xs text-gray-500">
-                          Created on {new Date(prompt.created_at).toLocaleDateString()}
+                          创建于 {new Date(prompt.created_at).toLocaleDateString()}
                         </p>
                       </div>
                     </Link>
@@ -166,12 +166,12 @@ const Profile = () => {
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <p className="text-gray-500">You haven't created any prompts yet.</p>
+                  <p className="text-gray-500">您还没有创建任何提示词。</p>
                   <Link
                     to="/create"
                     className="mt-4 inline-block px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
                   >
-                    Create Your First Prompt
+                    创建您的第一个提示词
                   </Link>
                 </div>
               )}
@@ -209,7 +209,7 @@ const Profile = () => {
                           {prompt.description}
                         </p>
                         <p className="text-xs text-gray-500">
-                          Saved on {new Date(prompt.created_at).toLocaleDateString()}
+                          收藏于 {new Date(prompt.created_at).toLocaleDateString()}
                         </p>
                       </div>
                     </Link>
@@ -217,12 +217,12 @@ const Profile = () => {
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <p className="text-gray-500">You haven't saved any prompts yet.</p>
+                  <p className="text-gray-500">您还没有收藏任何提示词。</p>
                   <Link
                     to="/"
                     className="mt-4 inline-block px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
                   >
-                    Browse Prompts
+                    浏览提示词
                   </Link>
                 </div>
               )}

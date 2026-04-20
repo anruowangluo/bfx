@@ -26,17 +26,17 @@ const Register = () => {
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
     if (!formData.name.trim()) {
-      newErrors.name = 'Name is required'
+      newErrors.name = '请输入姓名'
     }
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required'
+      newErrors.email = '请输入邮箱'
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Invalid email format'
+      newErrors.email = '邮箱格式不正确'
     }
     if (!formData.password) {
-      newErrors.password = 'Password is required'
+      newErrors.password = '请输入密码'
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters'
+      newErrors.password = '密码至少需要 6 个字符'
     }
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -50,13 +50,13 @@ const Register = () => {
       try {
         // In a real app, you would call Supabase auth API to register
         // For now, we'll just simulate a successful registration
-        console.log('Registering:', formData)
+        console.log('正在注册:', formData)
         // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 1000))
         // Navigate to home page
         navigate('/')
       } catch (error) {
-        console.error('Error registering:', error)
+        console.error('注册错误:', error)
       } finally {
         setIsSubmitting(false)
       }
@@ -66,12 +66,12 @@ const Register = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-md mx-auto">
-        <h1 className="text-2xl font-bold mb-6 text-center">Register</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center">注册</h1>
         <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           {/* Name */}
           <div className="mb-4">
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-              Name
+              姓名
             </label>
             <input
               type="text"
@@ -80,7 +80,7 @@ const Register = () => {
               value={formData.name}
               onChange={handleChange}
               className={`w-full px-3 py-2 border ${errors.name ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
-              placeholder="Enter your name"
+              placeholder="请输入您的姓名"
             />
             {errors.name && (
               <p className="mt-1 text-sm text-red-600">{errors.name}</p>
@@ -90,7 +90,7 @@ const Register = () => {
           {/* Email */}
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Email
+              邮箱
             </label>
             <input
               type="email"
@@ -99,7 +99,7 @@ const Register = () => {
               value={formData.email}
               onChange={handleChange}
               className={`w-full px-3 py-2 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
-              placeholder="Enter your email"
+              placeholder="请输入您的邮箱"
             />
             {errors.email && (
               <p className="mt-1 text-sm text-red-600">{errors.email}</p>
@@ -109,7 +109,7 @@ const Register = () => {
           {/* Password */}
           <div className="mb-6">
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-              Password
+              密码
             </label>
             <input
               type="password"
@@ -118,7 +118,7 @@ const Register = () => {
               value={formData.password}
               onChange={handleChange}
               className={`w-full px-3 py-2 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
-              placeholder="Enter your password"
+              placeholder="请输入您的密码"
             />
             {errors.password && (
               <p className="mt-1 text-sm text-red-600">{errors.password}</p>
@@ -131,15 +131,15 @@ const Register = () => {
             className="w-full py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Registering...' : 'Register'}
+            {isSubmitting ? '注册中...' : '注册'}
           </button>
 
           {/* Login link */}
           <div className="mt-4 text-center">
             <p className="text-gray-600">
-              Already have an account?{' '}
+              已有账号？{' '}
               <Link to="/login" className="text-indigo-600 hover:underline">
-                Login
+                登录
               </Link>
             </p>
           </div>

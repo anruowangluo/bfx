@@ -6,16 +6,16 @@ import { supabase } from '../lib/supabase'
 // Mock data for the prompt
 const mockPrompt = {
   id: '1',
-  title: 'Realistic Portraits',
-  description: 'Create realistic human portraits with detailed features',
-  content: 'Create a realistic portrait of a [age] year old [gender] with [hair color] hair and [eye color] eyes. The portrait should be in [style] style with [lighting] lighting.',
+  title: '逼真肖像',
+  description: '创建具有细致特征的逼真人物肖像',
+  content: '创建一幅 [年龄] 岁的 [性别] 逼真肖像，拥有 [发色] 头发和 [眼睛颜色] 眼睛。肖像应该采用 [风格] 风格，搭配 [光线] 光线。',
   author_id: 'user1',
-  author_name: 'Artist123',
+  author_name: '艺术家123',
   author_avatar: 'https://via.placeholder.com/40',
   category_id: '1',
-  category_name: 'Art',
+  category_name: '艺术',
   category_color: '#F43F5E',
-  tags: ['portrait', 'realistic', 'human', 'art', 'painting'],
+  tags: ['肖像', '逼真', '人物', '艺术', '绘画'],
   likes_count: 120,
   saves_count: 85,
   created_at: '2026-04-01T10:00:00Z',
@@ -28,18 +28,18 @@ const mockComments = [
     id: '1',
     prompt_id: '1',
     author_id: 'user2',
-    author_name: 'Writer456',
+    author_name: '作家456',
     author_avatar: 'https://via.placeholder.com/40',
-    content: 'This prompt works really well! I used it to create a portrait of a 30-year-old woman with brown hair and green eyes in oil painting style.',
+    content: '这个提示词真的很棒！我用它创作了一幅油画风格的 30 岁女性肖像，棕色头发，绿色眼睛。',
     created_at: '2026-04-02T14:30:00Z'
   },
   {
     id: '2',
     prompt_id: '1',
     author_id: 'user3',
-    author_name: 'Coder789',
+    author_name: '程序员789',
     author_avatar: 'https://via.placeholder.com/40',
-    content: 'Great prompt! I added some additional details about background and composition to make it even more specific.',
+    content: '很棒的提示词！我添加了一些关于背景和构图的额外细节，让它更加具体。',
     created_at: '2026-04-03T09:15:00Z'
   }
 ]
@@ -76,7 +76,7 @@ const PromptDetail = () => {
   // Handle share prompt
   const handleShare = () => {
     // In a real app, you would implement sharing functionality
-    alert('Share functionality would be implemented here')
+    alert('分享功能将在此实现')
   }
 
   // Handle submit comment
@@ -88,7 +88,7 @@ const PromptDetail = () => {
         id: `comment-${Date.now()}`,
         prompt_id: prompt.id,
         author_id: 'current-user',
-        author_name: 'Current User',
+        author_name: '当前用户',
         author_avatar: 'https://via.placeholder.com/40',
         content: commentText,
         created_at: new Date().toISOString()
@@ -106,7 +106,7 @@ const PromptDetail = () => {
         className="flex items-center gap-2 text-gray-600 hover:text-indigo-600 mb-6"
       >
         <ArrowLeft className="h-5 w-5" />
-        Back to prompts
+        返回提示词列表
       </button>
 
       {/* Prompt content */}
@@ -146,13 +146,13 @@ const PromptDetail = () => {
             <button
               onClick={handleCopy}
               className="absolute top-2 right-2 p-2 bg-white rounded-md shadow-sm hover:bg-gray-100 transition-colors"
-              title="Copy to clipboard"
+              title="复制到剪贴板"
             >
               <Copy className="h-4 w-4 text-gray-600" />
             </button>
             {showCopiedMessage && (
               <div className="absolute top-2 right-10 bg-green-100 text-green-800 px-2 py-1 rounded text-xs">
-                Copied!
+                已复制！
               </div>
             )}
           </div>
@@ -190,7 +190,7 @@ const PromptDetail = () => {
               className="flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
             >
               <Share2 className="h-4 w-4" />
-              Share
+              分享
             </button>
           </div>
         </div>
@@ -199,15 +199,15 @@ const PromptDetail = () => {
       {/* Usage examples */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
         <div className="p-6">
-          <h2 className="text-xl font-bold mb-4">Usage Examples</h2>
+          <h2 className="text-xl font-bold mb-4">使用示例</h2>
           <div className="space-y-4">
             <div className="border-l-4 border-indigo-500 pl-4 py-1">
-              <h3 className="font-medium mb-2">Example 1: Oil Painting Style</h3>
-              <p className="text-gray-600">Create a realistic portrait of a 30 year old woman with brown hair and green eyes. The portrait should be in oil painting style with natural lighting.</p>
+              <h3 className="font-medium mb-2">示例 1：油画风格</h3>
+              <p className="text-gray-600">创建一幅 30 岁女性的逼真肖像，棕色头发，绿色眼睛。肖像应该采用油画风格，搭配自然光。</p>
             </div>
             <div className="border-l-4 border-indigo-500 pl-4 py-1">
-              <h3 className="font-medium mb-2">Example 2: Digital Art Style</h3>
-              <p className="text-gray-600">Create a realistic portrait of a 25 year old man with black hair and blue eyes. The portrait should be in digital art style with studio lighting.</p>
+              <h3 className="font-medium mb-2">示例 2：数字艺术风格</h3>
+              <p className="text-gray-600">创建一幅 25 岁男性的逼真肖像，黑色头发，蓝色眼睛。肖像应该采用数字艺术风格，搭配工作室光。</p>
             </div>
           </div>
         </div>
@@ -218,7 +218,7 @@ const PromptDetail = () => {
         <div className="p-6">
           <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
             <MessageCircle className="h-5 w-5" />
-            Comments ({comments.length})
+            评论 ({comments.length})
           </h2>
 
           {/* Comment form */}
@@ -226,7 +226,7 @@ const PromptDetail = () => {
             <textarea
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
-              placeholder="Add your comment..."
+              placeholder="添加您的评论..."
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               rows={3}
             />
@@ -236,7 +236,7 @@ const PromptDetail = () => {
                 className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
                 disabled={!commentText.trim()}
               >
-                Post Comment
+                发表评论
               </button>
             </div>
           </form>

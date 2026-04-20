@@ -6,75 +6,75 @@ import { supabase } from '../lib/supabase'
 const mockPrompts = [
   {
     id: '1',
-    title: 'Realistic Portraits',
-    description: 'Create realistic human portraits with detailed features',
-    content: 'Create a realistic portrait of a [age] year old [gender] with [hair color] hair and [eye color] eyes. The portrait should be in [style] style with [lighting] lighting.',
+    title: '逼真肖像',
+    description: '创建具有细致特征的逼真人物肖像',
+    content: '创建一幅 [年龄] 岁的 [性别] 逼真肖像，拥有 [发色] 头发和 [眼睛颜色] 眼睛。肖像应该采用 [风格] 风格，搭配 [光线] 光线。',
     author_id: 'user1',
-    author_name: 'Artist123',
+    author_name: '艺术家123',
     category_id: '1',
-    category_name: 'Art',
+    category_name: '艺术',
     category_color: '#F43F5E',
-    tags: ['portrait', 'realistic', 'human'],
+    tags: ['肖像', '逼真', '人物'],
     likes_count: 120,
     saves_count: 85,
     created_at: '2026-04-01T10:00:00Z'
   },
   {
     id: '2',
-    title: 'Blog Post Outline',
-    description: 'Generate outlines for engaging blog posts',
-    content: 'Create a detailed outline for a blog post about [topic]. The outline should include an introduction, [number] main sections with subpoints, and a conclusion. Each section should have a catchy heading and 2-3 key points to discuss.',
+    title: '博客文章大纲',
+    description: '生成吸引人的博客文章大纲',
+    content: '为一篇关于 [主题] 的博客文章创建详细大纲。大纲应包含引言、[数量] 个带有子要点的主要章节，以及结语。每个章节应该有一个吸引人的标题和 2-3 个需要讨论的关键点。',
     author_id: 'user2',
-    author_name: 'Writer456',
+    author_name: '作家456',
     category_id: '2',
-    category_name: 'Writing',
+    category_name: '写作',
     category_color: '#6366F1',
-    tags: ['blog', 'writing', 'outline'],
+    tags: ['博客', '写作', '大纲'],
     likes_count: 95,
     saves_count: 62,
     created_at: '2026-04-02T14:30:00Z'
   },
   {
     id: '3',
-    title: 'JavaScript Debugger',
-    description: 'Debug JavaScript code and find errors',
-    content: 'Analyze the following JavaScript code and identify any errors or potential issues. Explain what the code is supposed to do, whats going wrong, and how to fix it.\n\n```javascript\n[code]\n```',
+    title: 'JavaScript 调试器',
+    description: '调试 JavaScript 代码并查找错误',
+    content: '分析以下 JavaScript 代码，识别任何错误或潜在问题。解释代码的功能、问题所在，以及如何修复。\n\n```javascript\n[代码]\n```',
     author_id: 'user3',
-    author_name: 'Coder789',
+    author_name: '程序员789',
     category_id: '3',
-    category_name: 'Coding',
+    category_name: '编程',
     category_color: '#10B981',
-    tags: ['javascript', 'debugging', 'code'],
+    tags: ['javascript', '调试', '代码'],
     likes_count: 150,
     saves_count: 110,
     created_at: '2026-04-03T09:15:00Z'
   },
   {
     id: '4',
-    title: 'Logo Design',
-    description: 'Create professional logo designs',
-    content: 'Design a logo for a [type of business] called [business name]. The logo should be [style] style, with [color scheme] colors. It should be simple, memorable, and scalable. Include 2-3 variations of the logo.',
+    title: 'Logo 设计',
+    description: '创建专业的 logo 设计',
+    content: '为一个名为 [公司名称] 的 [业务类型] 公司设计一个 logo。logo 应采用 [风格] 风格，配色方案为 [配色方案]。它应该简洁、易记且可缩放。包含 2-3 种 logo 变体。',
     author_id: 'user4',
-    author_name: 'Designer321',
+    author_name: '设计师321',
     category_id: '4',
-    category_name: 'Design',
+    category_name: '设计',
     category_color: '#F59E0B',
-    tags: ['logo', 'design', 'branding'],
+    tags: ['logo', '设计', '品牌'],
     likes_count: 88,
     saves_count: 55,
     created_at: '2026-04-04T11:45:00Z'
   },
   {
     id: '5',
-    title: 'Business Plan',
-    description: 'Create comprehensive business plans',
-    content: 'Create a detailed business plan for a [type of business] business. Include sections for executive summary, market analysis, competitive analysis, marketing strategy, operational plan, financial projections, and appendix. The plan should be professional and actionable.',
+    title: '商业计划书',
+    description: '创建全面的商业计划书',
+    content: '为一家 [业务类型] 企业创建详细的商业计划书。包含执行摘要、市场分析、竞争分析、营销策略、运营计划、财务预测和附录。该计划应该专业且可执行。',
     author_id: 'user5',
-    author_name: 'Entrepreneur654',
+    author_name: '创业者654',
     category_id: '5',
-    category_name: 'Business',
+    category_name: '商业',
     category_color: '#8B5CF6',
-    tags: ['business', 'plan', 'startup'],
+    tags: ['商业', '计划', '创业'],
     likes_count: 135,
     saves_count: 98,
     created_at: '2026-04-05T16:20:00Z'
@@ -83,11 +83,11 @@ const mockPrompts = [
 
 // Mock data for categories
 const mockCategories = [
-  { id: '1', name: 'Art', slug: 'art', color: '#F43F5E' },
-  { id: '2', name: 'Writing', slug: 'writing', color: '#6366F1' },
-  { id: '3', name: 'Coding', slug: 'coding', color: '#10B981' },
-  { id: '4', name: 'Design', slug: 'design', color: '#F59E0B' },
-  { id: '5', name: 'Business', slug: 'business', color: '#8B5CF6' }
+  { id: '1', name: '艺术', slug: 'art', color: '#F43F5E' },
+  { id: '2', name: '写作', slug: 'writing', color: '#6366F1' },
+  { id: '3', name: '编程', slug: 'coding', color: '#10B981' },
+  { id: '4', name: '设计', slug: 'design', color: '#F59E0B' },
+  { id: '5', name: '商业', slug: 'business', color: '#8B5CF6' }
 ]
 
 const Home = () => {
@@ -111,7 +111,7 @@ const Home = () => {
       <div className="relative mb-8">
         <input
           type="text"
-          placeholder="Search prompts..."
+          placeholder="搜索提示词..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full pl-10 pr-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -138,7 +138,7 @@ const Home = () => {
             onClick={() => setSelectedCategory('all')}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedCategory === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
           >
-            All
+            全部
           </button>
           {categories.map(category => (
             <button
@@ -201,7 +201,7 @@ const Home = () => {
                   )}
                 </div>
                 <div className="flex items-center text-sm text-gray-500">
-                  <span>by {prompt.author_name}</span>
+                  <span>作者：{prompt.author_name}</span>
                   <span className="mx-2">•</span>
                   <span>{new Date(prompt.created_at).toLocaleDateString()}</span>
                 </div>
@@ -214,7 +214,7 @@ const Home = () => {
       {/* No results message */}
       {filteredPrompts.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-500">No prompts found. Try a different search or category.</p>
+          <p className="text-gray-500">未找到提示词。请尝试其他搜索或分类。</p>
         </div>
       )}
     </div>
