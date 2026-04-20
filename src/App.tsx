@@ -18,9 +18,10 @@ const AppContent = () => {
 
   // 监听路由变化，保存和恢复滚动位置
   useEffect(() => {
-    // 当从首页进入详情页时，保存首页的滚动位置
+    // 当从首页进入详情页时，保存首页的滚动位置并滚动到顶部
     if (previousPath === '/' && location.pathname.startsWith('/prompt/')) {
       setHomeScrollPosition(window.scrollY)
+      window.scrollTo(0, 0) // 进入详情页时滚动到顶部
     }
     // 当从详情页返回首页时，恢复之前的滚动位置
     else if (previousPath.startsWith('/prompt/') && location.pathname === '/') {
