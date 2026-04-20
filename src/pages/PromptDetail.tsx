@@ -82,10 +82,11 @@ const PromptDetail = () => {
           textArea.select()
           
           // 对于移动设备，使用不同的选择方法
-          if (document.selection) {
-            document.selection.createRange().selectNodeContents(textArea)
-          } else {
+          if (window.getSelection) {
             textArea.setSelectionRange(0, textArea.value.length)
+          } else {
+            // 兼容旧浏览器
+            textArea.select()
           }
           
           // 执行复制命令

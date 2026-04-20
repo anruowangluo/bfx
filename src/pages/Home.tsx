@@ -119,6 +119,8 @@ const Home = () => {
     const handleScroll = () => {
       if (scrollRef.current) {
         scrollPositionRef.current = scrollRef.current.scrollTop
+        // 同时保存到sessionStorage，确保页面刷新后也能恢复
+        sessionStorage.setItem('homeScrollPosition', scrollPositionRef.current.toString())
       }
     }
 
@@ -137,10 +139,16 @@ const Home = () => {
   // 恢复滚动位置
   useEffect(() => {
     if (scrollRef.current && location.pathname === '/') {
-      // 使用requestAnimationFrame确保DOM已经更新
-      requestAnimationFrame(() => {
-        scrollRef.current!.scrollTop = scrollPositionRef.current
-      })
+      // 从sessionStorage中获取保存的滚动位置
+      const savedPosition = sessionStorage.getItem('homeScrollPosition')
+      const position = savedPosition ? parseInt(savedPosition, 10) : 0
+      
+      // 使用setTimeout确保DOM已经完全更新，增加延迟时间以确保所有组件都已渲染
+      setTimeout(() => {
+        if (scrollRef.current) {
+          scrollRef.current.scrollTop = position
+        }
+      }, 200)
     }
   }, [location.pathname])
 
