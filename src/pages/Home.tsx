@@ -144,10 +144,6 @@ const Home = () => {
             className="block group"
           >
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-200 active:scale-[0.98]">
-              <div
-                className="h-1.5"
-                style={{ backgroundColor: prompt.category_color }}
-              />
               {prompt.image && (
                 <div className="w-full h-40 overflow-hidden">
                   <img 
