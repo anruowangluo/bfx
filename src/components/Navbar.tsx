@@ -28,6 +28,7 @@ const Navbar = () => {
   const isLoginPage = location.pathname === '/login' || location.pathname === '/register'
   const isCreatePage = location.pathname === '/create'
   const isProfilePage = location.pathname === '/profile'
+  const isTabbarPage = isHomePage || isCreatePage || isProfilePage
 
   const getPageTitle = () => {
     if (isHomePage) return '提示词分享'
@@ -44,7 +45,7 @@ const Navbar = () => {
       <div className="flex items-center justify-between h-14 px-4">
         {/* 左侧 - 返回按钮或logo */}
         <div className="flex items-center">
-          {!isHomePage ? (
+          {!isTabbarPage ? (
             <button
               onClick={() => navigate(-1)}
               className="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors"
@@ -63,6 +64,11 @@ const Navbar = () => {
 
         {/* 中间 - 页面标题 */}
         {!isHomePage && (
+          <h2 className="text-lg font-semibold text-gray-900">
+            {getPageTitle()}
+          </h2>
+        )}
+        {isHomePage && (
           <h2 className="text-lg font-semibold text-gray-900">
             {getPageTitle()}
           </h2>
