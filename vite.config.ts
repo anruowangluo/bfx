@@ -8,6 +8,9 @@ export default defineConfig({
   build: {
     sourcemap: 'hidden',
   },
+  server: {
+    allowedHosts: ['zzl.open.etong.cc']
+  },
   plugins: [
     react(),
     traeBadgePlugin({
