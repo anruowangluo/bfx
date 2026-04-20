@@ -62,17 +62,7 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* 中间 - 页面标题 */}
-        {!isHomePage && (
-          <h2 className="text-lg font-semibold text-gray-900">
-            {getPageTitle()}
-          </h2>
-        )}
-        {isHomePage && (
-          <h2 className="text-lg font-semibold text-gray-900">
-            {getPageTitle()}
-          </h2>
-        )}
+
 
         {/* 右侧 - 操作按钮 */}
         <div className="flex items-center gap-2">
