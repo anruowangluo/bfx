@@ -18,7 +18,8 @@ const mockPrompts = [
     tags: ['肖像', '逼真', '人物'],
     likes_count: 120,
     saves_count: 85,
-    created_at: '2026-04-01T10:00:00Z'
+    created_at: '2026-04-01T10:00:00Z',
+    image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=realistic%20portrait%20painting%20of%20a%20person%20with%20detailed%20features&image_size=landscape_4_3'
   },
   {
     id: '2',
@@ -33,7 +34,8 @@ const mockPrompts = [
     tags: ['博客', '写作', '大纲'],
     likes_count: 95,
     saves_count: 62,
-    created_at: '2026-04-02T14:30:00Z'
+    created_at: '2026-04-02T14:30:00Z',
+    image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=blog%20article%20outline%20with%20topics%20and%20structure&image_size=landscape_4_3'
   },
   {
     id: '3',
@@ -48,7 +50,8 @@ const mockPrompts = [
     tags: ['javascript', '调试', '代码'],
     likes_count: 150,
     saves_count: 110,
-    created_at: '2026-04-03T09:15:00Z'
+    created_at: '2026-04-03T09:15:00Z',
+    image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=javascript%20code%20debugging%20with%20errors%20highlighted&image_size=landscape_4_3'
   },
   {
     id: '4',
@@ -63,7 +66,8 @@ const mockPrompts = [
     tags: ['logo', '设计', '品牌'],
     likes_count: 88,
     saves_count: 55,
-    created_at: '2026-04-04T11:45:00Z'
+    created_at: '2026-04-04T11:45:00Z',
+    image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20logo%20design%20with%20multiple%20variations&image_size=landscape_4_3'
   },
   {
     id: '5',
@@ -78,7 +82,8 @@ const mockPrompts = [
     tags: ['商业', '计划', '创业'],
     likes_count: 135,
     saves_count: 98,
-    created_at: '2026-04-05T16:20:00Z'
+    created_at: '2026-04-05T16:20:00Z',
+    image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=business%20plan%20document%20with%20charts%20and%20graphs&image_size=landscape_4_3'
   }
 ]
 
@@ -143,6 +148,15 @@ const Home = () => {
                 className="h-1.5"
                 style={{ backgroundColor: prompt.category_color }}
               />
+              {prompt.image && (
+                <div className="w-full h-40 overflow-hidden">
+                  <img 
+                    src={prompt.image} 
+                    alt={prompt.title} 
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
+              )}
               <div className="p-4">
                 <div className="flex items-center mb-2">
                   <span
