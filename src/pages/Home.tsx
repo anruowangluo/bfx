@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect, useRef } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 
@@ -97,10 +97,13 @@ const mockCategories = [
 ]
 
 const Home = () => {
+  const location = useLocation()
   const [prompts, setPrompts] = useState(mockPrompts)
   const [categories, setCategories] = useState(mockCategories)
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchTerm, setSearchTerm] = useState('')
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const scrollPositionRef = useRef(0)
 
   // Filter prompts based on selected category and search term
   const filteredPrompts = prompts.filter((prompt) => {
@@ -111,8 +114,38 @@ const Home = () => {
     return matchesCategory && matchesSearch
   })
 
+  // 保存滚动位置
+  useEffect(() => {
+    const handleScroll = () => {
+      if (scrollRef.current) {
+        scrollPositionRef.current = scrollRef.current.scrollTop
+      }
+    }
+
+    const scrollElement = scrollRef.current
+    if (scrollElement) {
+      scrollElement.addEventListener('scroll', handleScroll)
+    }
+
+    return () => {
+      if (scrollElement) {
+        scrollElement.removeEventListener('scroll', handleScroll)
+      }
+    }
+  }, [])
+
+  // 恢复滚动位置
+  useEffect(() => {
+    if (scrollRef.current && location.pathname === '/') {
+      // 使用requestAnimationFrame确保DOM已经更新
+      requestAnimationFrame(() => {
+        scrollRef.current!.scrollTop = scrollPositionRef.current
+      })
+    }
+  }, [location.pathname])
+
   return (
-    <div className="container mx-auto px-4 py-4">
+    <div className="container mx-auto px-4 py-4" ref={scrollRef} style={{ maxHeight: 'calc(100vh - 10rem)', overflowY: 'auto' }}>
       {/* Categories */}
       <div className="mb-4 overflow-x-auto pb-2 -mx-4 px-4">
         <div className="flex space-x-3">

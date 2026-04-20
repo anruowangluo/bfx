@@ -54,6 +54,11 @@ const PromptDetail = () => {
   const [commentText, setCommentText] = useState('')
   const [showCopiedMessage, setShowCopiedMessage] = useState(false)
 
+  // 进入详情页面时滚动到顶部
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   // Copy prompt content to clipboard
   const handleCopy = async () => {
     // 直接使用降级方案，因为现代剪贴板 API 在很多环境中被阻止
