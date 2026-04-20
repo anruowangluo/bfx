@@ -100,14 +100,7 @@ const PromptDetail = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      {/* Back button */}
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-gray-600 hover:text-indigo-600 mb-6 p-2 rounded-full hover:bg-gray-100 transition-colors"
-      >
-        <ArrowLeft className="h-5 w-5" />
-        <span>返回</span>
-      </button>
+
 
       {/* Prompt content */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
