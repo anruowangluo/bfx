@@ -13,10 +13,15 @@ const Navbar = () => {
   useEffect(() => {
     // 检查用户登录状态
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (session) {
-        setIsLoggedIn(true)
-        setUser(session.user)
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session) {
+          setIsLoggedIn(true)
+          setUser(session.user)
+        }
+      } catch (error) {
+        // 忽略Supabase连接错误，使用默认的未登录状态
+        console.log('Supabase connection error:', error)
       }
     }
     checkAuth()
