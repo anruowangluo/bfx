@@ -19,7 +19,8 @@ const mockPrompt = {
   likes_count: 120,
   saves_count: 85,
   created_at: '2026-04-01T10:00:00Z',
-  updated_at: '2026-04-01T10:00:00Z'
+  updated_at: '2026-04-01T10:00:00Z',
+  image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=realistic%20portrait%20painting%20of%20a%20person%20with%20detailed%20features&image_size=landscape_4_3'
 }
 
 // Mock data for comments
@@ -186,6 +187,19 @@ const PromptDetail = () => {
 
           <h1 className="text-xl font-bold mb-3">{prompt.title}</h1>
           <p className="text-gray-600 mb-5">{prompt.description}</p>
+
+          {/* 效果图 */}
+          {prompt.image && (
+            <div className="mb-5">
+              <div className="w-full rounded-lg overflow-hidden">
+                <img 
+                  src={prompt.image} 
+                  alt={prompt.title} 
+                  className="w-full h-auto object-cover"
+                />
+              </div>
+            </div>
+          )}
 
           <div className="mb-5">
             <div className="flex justify-end mb-2">
