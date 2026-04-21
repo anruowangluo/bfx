@@ -3,7 +3,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { generateRequestId, retry } from './network';
 
 // 错误码
-const errorCode: Record<number, string> = {
+const errorCode: Record<number | 'default', string> = {
   401: '未授权，请重新登录',
   403: '拒绝访问',
   404: '请求地址出错',
@@ -39,9 +39,9 @@ const createAxiosInstance = (): AxiosInstance => {
       config.headers['X-Request-ID'] = generateRequestId();
       
       // 是否需要设置 token
-      const isToken = (config.headers || {}).isToken === false;
+      const isToken = (config.headers as any)?.isToken === false;
       // 是否需要防止数据重复提交
-      const isRepeatSubmit = (config.headers || {}).repeatSubmit === false;
+      const isRepeatSubmit = (config.headers as any)?.repeatSubmit === false;
       
       // 这里可以添加 token 处理
       // const token = store.getters.token;
@@ -168,22 +168,22 @@ export const request = async <T>(config: AxiosRequestConfig): Promise<T> => {
     throw new Error('URL is required');
   }
 
-  const requestFn = async () => {
+  const requestFn = async (): Promise<T> => {
     switch (method.toLowerCase()) {
       case 'get':
-        return apiClient.get(url, { params, ...restConfig });
+        return apiClient.get(url, { params, ...restConfig }) as Promise<T>;
       case 'post':
-        return apiClient.post(url, data, restConfig);
+        return apiClient.post(url, data, restConfig) as Promise<T>;
       case 'put':
-        return apiClient.put(url, data, restConfig);
+        return apiClient.put(url, data, restConfig) as Promise<T>;
       case 'delete':
-        return apiClient.delete(url, { params, data, ...restConfig });
+        return apiClient.delete(url, { params, data, ...restConfig }) as Promise<T>;
       default:
-        return apiClient.request({ url, method, params, data, ...restConfig });
+        return apiClient.request({ url, method, params, data, ...restConfig }) as Promise<T>;
     }
   };
 
-  return retry(requestFn);
+  return retry<T>(requestFn);
 };
 
 /**

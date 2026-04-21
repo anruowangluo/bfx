@@ -25,8 +25,8 @@ const PromptDetail = () => {
             getComments(id)
           ])
           if (promptData) {
-            setPrompt(promptData)
-            setComments(commentsData)
+            setPrompt(promptData as Prompt)
+            setComments(commentsData as Comment[])
           }
         } catch (error) {
           console.error('Error fetching prompt data:', error)
@@ -153,7 +153,7 @@ const PromptDetail = () => {
         })
         
         if (newComment) {
-          setComments([...comments, newComment])
+          setComments([...comments, newComment as Comment])
           setCommentText('')
         }
       } catch (error) {

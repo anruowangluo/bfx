@@ -22,8 +22,8 @@ const Home = () => {
           getPrompts(),
           getCategories()
         ])
-        setPrompts(promptsData)
-        setCategories(categoriesData)
+        setPrompts(promptsData as Prompt[])
+        setCategories(categoriesData as Category[])
       } catch (error) {
         console.error('Error fetching data:', error)
       } finally {
@@ -40,7 +40,7 @@ const Home = () => {
       setLoading(true)
       try {
         const promptsData = await getPrompts(selectedCategory)
-        setPrompts(promptsData)
+        setPrompts(promptsData as Prompt[])
       } catch (error) {
         console.error('Error fetching prompts by category:', error)
       } finally {
