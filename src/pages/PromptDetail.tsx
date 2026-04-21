@@ -1,191 +1,44 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { Copy, Heart, Save, Share2, MessageCircle, ArrowLeft } from 'lucide-react'
-import { supabase } from '../lib/supabase'
-
-// Mock data for prompts - same as Home page
-const mockPrompts = [
-  {
-    id: '1',
-    title: '逼真肖像',
-    description: '创建具有细致特征的逼真人物肖像',
-    content: '创建一幅 [年龄] 岁的 [性别] 逼真肖像，拥有 [发色] 头发和 [眼睛颜色] 眼睛。肖像应该采用 [风格] 风格，搭配 [光线] 光线。',
-    author_id: 'user1',
-    author_name: '艺术家123',
-    author_avatar: 'https://via.placeholder.com/40',
-    category_id: '1',
-    category_name: '艺术',
-    category_color: '#F43F5E',
-    tags: ['肖像', '逼真', '人物', '艺术', '绘画'],
-    likes_count: 120,
-    saves_count: 85,
-    created_at: '2026-04-01T10:00:00Z',
-    updated_at: '2026-04-01T10:00:00Z',
-    image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=realistic%20portrait%20painting%20of%20a%20person%20with%20detailed%20features&image_size=landscape_4_3'
-  },
-  {
-    id: '2',
-    title: '博客文章大纲',
-    description: '生成吸引人的博客文章大纲',
-    content: '为一篇关于 [主题] 的博客文章创建详细大纲。大纲应包含引言、[数量] 个带有子要点的主要章节，以及结语。每个章节应该有一个吸引人的标题和 2-3 个需要讨论的关键点。',
-    author_id: 'user2',
-    author_name: '作家456',
-    author_avatar: 'https://via.placeholder.com/40',
-    category_id: '2',
-    category_name: '写作',
-    category_color: '#6366F1',
-    tags: ['博客', '写作', '大纲'],
-    likes_count: 95,
-    saves_count: 62,
-    created_at: '2026-04-02T14:30:00Z',
-    updated_at: '2026-04-02T14:30:00Z',
-    image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=blog%20article%20outline%20with%20topics%20and%20structure&image_size=landscape_4_3'
-  },
-  {
-    id: '3',
-    title: 'JavaScript 调试器',
-    description: '调试 JavaScript 代码并查找错误',
-    content: '分析以下 JavaScript 代码，识别任何错误或潜在问题。解释代码的功能、问题所在，以及如何修复。\n\n```javascript\n[代码]\n```',
-    author_id: 'user3',
-    author_name: '程序员789',
-    author_avatar: 'https://via.placeholder.com/40',
-    category_id: '3',
-    category_name: '编程',
-    category_color: '#10B981',
-    tags: ['javascript', '调试', '代码'],
-    likes_count: 150,
-    saves_count: 110,
-    created_at: '2026-04-03T09:15:00Z',
-    updated_at: '2026-04-03T09:15:00Z',
-    image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=javascript%20code%20debugging%20with%20errors%20highlighted&image_size=landscape_4_3'
-  },
-  {
-    id: '4',
-    title: 'Logo 设计',
-    description: '创建专业的 logo 设计',
-    content: '为一个名为 [公司名称] 的 [业务类型] 公司设计一个 logo。logo 应采用 [风格] 风格，配色方案为 [配色方案]。它应该简洁、易记且可缩放。包含 2-3 种 logo 变体。',
-    author_id: 'user4',
-    author_name: '设计师321',
-    author_avatar: 'https://via.placeholder.com/40',
-    category_id: '4',
-    category_name: '设计',
-    category_color: '#F59E0B',
-    tags: ['logo', '设计', '品牌'],
-    likes_count: 88,
-    saves_count: 55,
-    created_at: '2026-04-04T11:45:00Z',
-    updated_at: '2026-04-04T11:45:00Z',
-    image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20logo%20design%20with%20multiple%20variations&image_size=landscape_4_3'
-  },
-  {
-    id: '5',
-    title: '商业计划书',
-    description: '创建全面的商业计划书',
-    content: '为一家 [业务类型] 企业创建详细的商业计划书。包含执行摘要、市场分析、竞争分析、营销策略、运营计划、财务预测和附录。该计划应该专业且可执行。',
-    author_id: 'user5',
-    author_name: '创业者654',
-    author_avatar: 'https://via.placeholder.com/40',
-    category_id: '5',
-    category_name: '商业',
-    category_color: '#8B5CF6',
-    tags: ['商业', '计划', '创业'],
-    likes_count: 135,
-    saves_count: 98,
-    created_at: '2026-04-05T16:20:00Z',
-    updated_at: '2026-04-05T16:20:00Z',
-    image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=business%20plan%20document%20with%20charts%20and%20graphs&image_size=landscape_4_3'
-  }
-]
-
-// Mock data for comments - specific to each prompt
-const mockComments = {
-  '1': [
-    {
-      id: '1',
-      prompt_id: '1',
-      author_id: 'user2',
-      author_name: '作家456',
-      author_avatar: 'https://via.placeholder.com/40',
-      content: '这个提示词真的很棒！我用它创作了一幅油画风格的 30 岁女性肖像，棕色头发，绿色眼睛。',
-      created_at: '2026-04-02T14:30:00Z'
-    },
-    {
-      id: '2',
-      prompt_id: '1',
-      author_id: 'user3',
-      author_name: '程序员789',
-      author_avatar: 'https://via.placeholder.com/40',
-      content: '很棒的提示词！我添加了一些关于背景和构图的额外细节，让它更加具体。',
-      created_at: '2026-04-03T09:15:00Z'
-    }
-  ],
-  '2': [
-    {
-      id: '3',
-      prompt_id: '2',
-      author_id: 'user4',
-      author_name: '设计师321',
-      author_avatar: 'https://via.placeholder.com/40',
-      content: '这个大纲模板非常实用，帮我节省了很多时间！',
-      created_at: '2026-04-05T10:00:00Z'
-    }
-  ],
-  '3': [
-    {
-      id: '4',
-      prompt_id: '3',
-      author_id: 'user5',
-      author_name: '创业者654',
-      author_avatar: 'https://via.placeholder.com/40',
-      content: '作为一名前端开发者，这个调试提示词对我帮助很大！',
-      created_at: '2026-04-06T14:20:00Z'
-    }
-  ],
-  '4': [
-    {
-      id: '5',
-      prompt_id: '4',
-      author_id: 'user1',
-      author_name: '艺术家123',
-      author_avatar: 'https://via.placeholder.com/40',
-      content: '这个 logo 设计提示词非常全面，包含了所有必要的元素。',
-      created_at: '2026-04-07T09:30:00Z'
-    }
-  ],
-  '5': [
-    {
-      id: '6',
-      prompt_id: '5',
-      author_id: 'user2',
-      author_name: '作家456',
-      author_avatar: 'https://via.placeholder.com/40',
-      content: '这份商业计划书模板非常专业，帮我理清了很多思路。',
-      created_at: '2026-04-08T16:45:00Z'
-    }
-  ]
-}
+import { api, Prompt, Comment } from '../services/api'
 
 const PromptDetail = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const [prompt, setPrompt] = useState(mockPrompts[0])
-  const [comments, setComments] = useState(mockComments['1'] || [])
+  const [prompt, setPrompt] = useState<Prompt | null>(null)
+  const [comments, setComments] = useState<Comment[]>([])
   const [isLiked, setIsLiked] = useState(false)
   const [isSaved, setIsSaved] = useState(false)
   const [commentText, setCommentText] = useState('')
   const [showCopiedMessage, setShowCopiedMessage] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   // 根据 URL 参数获取对应的提示词数据
   useEffect(() => {
-    if (id) {
-      const foundPrompt = mockPrompts.find(p => p.id === id)
-      if (foundPrompt) {
-        setPrompt(foundPrompt)
-        setComments(mockComments[id] || [])
+    const fetchPromptData = async () => {
+      if (id) {
+        setLoading(true)
+        try {
+          const [promptData, commentsData] = await Promise.all([
+            api.getPromptById(id),
+            api.getComments(id)
+          ])
+          if (promptData) {
+            setPrompt(promptData)
+            setComments(commentsData)
+          }
+        } catch (error) {
+          console.error('Error fetching prompt data:', error)
+        } finally {
+          setLoading(false)
+        }
       }
+      // 进入详情页面时滚动到顶部
+      window.scrollTo(0, 0)
     }
-    // 进入详情页面时滚动到顶部
-    window.scrollTo(0, 0)
+
+    fetchPromptData()
   }, [id])
 
   // Copy prompt content to clipboard
@@ -250,15 +103,33 @@ const PromptDetail = () => {
   }
 
   // Handle like prompt
-  const handleLike = () => {
-    setIsLiked(!isLiked)
-    // In a real app, you would call an API to update the like count
+  const handleLike = async () => {
+    if (prompt) {
+      const success = await api.likePrompt(prompt.id)
+      if (success) {
+        setIsLiked(!isLiked)
+        // Update local state for immediate feedback
+        setPrompt({
+          ...prompt,
+          likes_count: isLiked ? prompt.likes_count - 1 : prompt.likes_count + 1
+        })
+      }
+    }
   }
 
   // Handle save prompt
-  const handleSave = () => {
-    setIsSaved(!isSaved)
-    // In a real app, you would call an API to save the prompt
+  const handleSave = async () => {
+    if (prompt) {
+      const success = await api.savePrompt(prompt.id)
+      if (success) {
+        setIsSaved(!isSaved)
+        // Update local state for immediate feedback
+        setPrompt({
+          ...prompt,
+          saves_count: isSaved ? prompt.saves_count - 1 : prompt.saves_count + 1
+        })
+      }
+    }
   }
 
   // Handle share prompt
@@ -268,22 +139,52 @@ const PromptDetail = () => {
   }
 
   // Handle submit comment
-  const handleSubmitComment = (e: React.FormEvent) => {
+  const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (commentText.trim()) {
-      // In a real app, you would call an API to add the comment
-      const newComment = {
-        id: `comment-${Date.now()}`,
+    if (commentText.trim() && prompt) {
+      const newComment = await api.createComment({
         prompt_id: prompt.id,
         author_id: 'current-user',
         author_name: '当前用户',
         author_avatar: 'https://via.placeholder.com/40',
-        content: commentText,
-        created_at: new Date().toISOString()
+        content: commentText
+      })
+      
+      if (newComment) {
+        setComments([...comments, newComment])
+        setCommentText('')
       }
-      setComments([...comments, newComment])
-      setCommentText('')
     }
+  }
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-20 text-center">
+        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-100 mb-4">
+          <div className="w-8 h-8 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+        </div>
+        <p className="text-gray-500 mb-2">加载中...</p>
+      </div>
+    )
+  }
+
+  // Prompt not found
+  if (!prompt) {
+    return (
+      <div className="container mx-auto px-4 py-20 text-center">
+        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-100 mb-4">
+          <ArrowLeft className="h-10 w-10 text-gray-400" />
+        </div>
+        <p className="text-gray-500 mb-2">提示词不存在</p>
+        <button
+          onClick={() => navigate('/')}
+          className="mt-4 px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+        >
+          返回首页
+        </button>
+      </div>
+    )
   }
 
   return (
@@ -296,7 +197,7 @@ const PromptDetail = () => {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <img
-                src={prompt.author_avatar}
+                src={prompt.author_avatar || 'https://via.placeholder.com/40'}
                 alt={prompt.author_name}
                 className="w-10 h-10 rounded-full object-cover"
               />
@@ -424,7 +325,7 @@ const PromptDetail = () => {
             {comments.map(comment => (
               <div key={comment.id} className="flex gap-3">
                 <img
-                  src={comment.author_avatar}
+                  src={comment.author_avatar || 'https://via.placeholder.com/40'}
                   alt={comment.author_name}
                   className="w-12 h-12 rounded-full object-cover flex-shrink-0"
                 />
