@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Search } from 'lucide-react'
-import { api, Prompt, Category } from '../services/api'
+import { getPrompts, getCategories, Prompt, Category } from '../services/api'
 
 const Home = () => {
   const location = useLocation()
@@ -19,8 +19,8 @@ const Home = () => {
       setLoading(true)
       try {
         const [promptsData, categoriesData] = await Promise.all([
-          api.getPrompts(),
-          api.getCategories()
+          getPrompts(),
+          getCategories()
         ])
         setPrompts(promptsData)
         setCategories(categoriesData)
@@ -39,7 +39,7 @@ const Home = () => {
     const fetchPromptsByCategory = async () => {
       setLoading(true)
       try {
-        const promptsData = await api.getPrompts(selectedCategory)
+        const promptsData = await getPrompts(selectedCategory)
         setPrompts(promptsData)
       } catch (error) {
         console.error('Error fetching prompts by category:', error)

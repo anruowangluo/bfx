@@ -46,6 +46,42 @@ const createAxiosInstance = (): AxiosInstance => {
 const apiClient = createAxiosInstance();
 
 /**
+ * 统一请求方法
+ * @param config 请求配置
+ * @returns Promise
+ */
+export const request = async <T>(config: AxiosRequestConfig): Promise<T> => {
+  const {
+    url,
+    method = 'get',
+    params,
+    data,
+    ...restConfig
+  } = config;
+
+  if (!url) {
+    throw new Error('URL is required');
+  }
+
+  const requestFn = async () => {
+    switch (method.toLowerCase()) {
+      case 'get':
+        return apiClient.get(url, { params, ...restConfig });
+      case 'post':
+        return apiClient.post(url, data, restConfig);
+      case 'put':
+        return apiClient.put(url, data, restConfig);
+      case 'delete':
+        return apiClient.delete(url, { params, data, ...restConfig });
+      default:
+        return apiClient.request({ url, method, params, data, ...restConfig });
+    }
+  };
+
+  return retry(requestFn);
+};
+
+/**
  * 封装 GET 请求
  * @param url 请求 URL
  * @param params 查询参数
@@ -53,7 +89,7 @@ const apiClient = createAxiosInstance();
  * @returns Promise
  */
 export const get = <T>(url: string, params?: any, config?: AxiosRequestConfig): Promise<T> => {
-  return retry(() => apiClient.get(url, { params, ...config }));
+  return request<T>({ url, method: 'get', params, ...config });
 };
 
 /**
@@ -64,7 +100,7 @@ export const get = <T>(url: string, params?: any, config?: AxiosRequestConfig): 
  * @returns Promise
  */
 export const post = <T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
-  return retry(() => apiClient.post(url, data, config));
+  return request<T>({ url, method: 'post', data, ...config });
 };
 
 /**
@@ -75,7 +111,7 @@ export const post = <T>(url: string, data?: any, config?: AxiosRequestConfig): P
  * @returns Promise
  */
 export const put = <T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
-  return retry(() => apiClient.put(url, data, config));
+  return request<T>({ url, method: 'put', data, ...config });
 };
 
 /**
@@ -85,13 +121,7 @@ export const put = <T>(url: string, data?: any, config?: AxiosRequestConfig): Pr
  * @returns Promise
  */
 export const del = <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
-  return retry(() => apiClient.delete(url, config));
+  return request<T>({ url, method: 'delete', ...config });
 };
 
-export default {
-  get,
-  post,
-  put,
-  delete: del,
-  apiClient,
-};
+export default request;

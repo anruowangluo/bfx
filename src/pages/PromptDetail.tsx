@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { Copy, Heart, Save, Share2, MessageCircle, ArrowLeft } from 'lucide-react'
-import { api, Prompt, Comment } from '../services/api'
+import { getPromptById, getComments, likePrompt, savePrompt, createComment, Prompt, Comment } from '../services/api'
 
 const PromptDetail = () => {
   const { id } = useParams<{ id: string }>()
@@ -21,8 +21,8 @@ const PromptDetail = () => {
         setLoading(true)
         try {
           const [promptData, commentsData] = await Promise.all([
-            api.getPromptById(id),
-            api.getComments(id)
+            getPromptById(id),
+            getComments(id)
           ])
           if (promptData) {
             setPrompt(promptData)
@@ -105,14 +105,16 @@ const PromptDetail = () => {
   // Handle like prompt
   const handleLike = async () => {
     if (prompt) {
-      const success = await api.likePrompt(prompt.id)
-      if (success) {
+      try {
+        await likePrompt(prompt.id)
         setIsLiked(!isLiked)
         // Update local state for immediate feedback
         setPrompt({
           ...prompt,
           likes_count: isLiked ? prompt.likes_count - 1 : prompt.likes_count + 1
         })
+      } catch (error) {
+        console.error('Error liking prompt:', error)
       }
     }
   }
@@ -120,14 +122,16 @@ const PromptDetail = () => {
   // Handle save prompt
   const handleSave = async () => {
     if (prompt) {
-      const success = await api.savePrompt(prompt.id)
-      if (success) {
+      try {
+        await savePrompt(prompt.id)
         setIsSaved(!isSaved)
         // Update local state for immediate feedback
         setPrompt({
           ...prompt,
           saves_count: isSaved ? prompt.saves_count - 1 : prompt.saves_count + 1
         })
+      } catch (error) {
+        console.error('Error saving prompt:', error)
       }
     }
   }
@@ -142,17 +146,18 @@ const PromptDetail = () => {
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault()
     if (commentText.trim() && prompt) {
-      const newComment = await api.createComment({
-        prompt_id: prompt.id,
-        author_id: 'current-user',
-        author_name: '当前用户',
-        author_avatar: 'https://via.placeholder.com/40',
-        content: commentText
-      })
-      
-      if (newComment) {
-        setComments([...comments, newComment])
-        setCommentText('')
+      try {
+        const newComment = await createComment({
+          prompt_id: prompt.id,
+          content: commentText
+        })
+        
+        if (newComment) {
+          setComments([...comments, newComment])
+          setCommentText('')
+        }
+      } catch (error) {
+        console.error('Error creating comment:', error)
       }
     }
   }
