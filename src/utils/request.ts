@@ -22,7 +22,7 @@ export let isRelogin = {
 // 创建 axios 实例
 const createAxiosInstance = (): AxiosInstance => {
   const instance = axios.create({
-    baseURL: 'https://zzl.open.etong.cc',
+    baseURL: 'http://w33299s260.zicp.vip/api/v1/prompt',
     timeout: 10000,
     headers: {
       'Content-Type': 'application/json',

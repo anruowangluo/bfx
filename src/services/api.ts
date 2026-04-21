@@ -51,7 +51,7 @@ export async function getPrompts(categoryId?: string) {
     params.category_id = categoryId;
   }
   return request({
-    url: '/api/v1/prompt/prompts',
+    url: '/prompts',
     method: 'get',
     params: params
   });
@@ -59,14 +59,14 @@ export async function getPrompts(categoryId?: string) {
 
 export async function getPromptById(id: string) {
   return request({
-    url: `/api/v1/prompt/prompts/${id}`,
+    url: `/prompts/${id}`,
     method: 'get'
   });
 }
 
 export async function createPrompt(data: Omit<Prompt, 'id' | 'created_at' | 'updated_at' | 'likes_count' | 'saves_count'>) {
   return request({
-    url: '/api/v1/prompt/prompts',
+    url: '/prompts',
     method: 'post',
     data: data
   });
@@ -74,14 +74,14 @@ export async function createPrompt(data: Omit<Prompt, 'id' | 'created_at' | 'upd
 
 export async function likePrompt(promptId: string) {
   return request({
-    url: `/api/v1/prompt/prompts/${promptId}/like`,
+    url: `/prompts/${promptId}/like`,
     method: 'post'
   });
 }
 
 export async function savePrompt(promptId: string) {
   return request({
-    url: `/api/v1/prompt/prompts/${promptId}/save`,
+    url: `/prompts/${promptId}/save`,
     method: 'post'
   });
 }
@@ -89,7 +89,7 @@ export async function savePrompt(promptId: string) {
 // 分类相关接口
 export async function getCategories() {
   return request({
-    url: '/api/v1/prompt/categories',
+    url: '/categories',
     method: 'get'
   });
 }
@@ -97,14 +97,14 @@ export async function getCategories() {
 // 评论相关接口
 export async function getComments(promptId: string) {
   return request({
-    url: `/api/v1/prompt/prompts/${promptId}/comments`,
+    url: `/prompts/${promptId}/comments`,
     method: 'get'
   });
 }
 
 export async function createComment(data: { prompt_id: string; content: string }) {
   return request({
-    url: `/api/v1/prompt/prompts/${data.prompt_id}/comments`,
+    url: `/prompts/${data.prompt_id}/comments`,
     method: 'post',
     data: {
       content: data.content
@@ -115,7 +115,7 @@ export async function createComment(data: { prompt_id: string; content: string }
 // 用户相关接口
 export async function getUserById(userId: string) {
   return request({
-    url: `/api/v1/prompt/users/${userId}`,
+    url: `/users/${userId}`,
     method: 'get'
   });
 }
@@ -129,7 +129,7 @@ export async function login(username?: string, password?: string, code?: string,
     uuid
   };
   return request({
-    url: '/api/v1/prompt/login',
+    url: '/login',
     headers: {
       isToken: false
     },
@@ -140,7 +140,7 @@ export async function login(username?: string, password?: string, code?: string,
 
 export async function register(data: any) {
   return request({
-    url: '/api/v1/prompt/register',
+    url: '/register',
     headers: {
       isToken: false
     },
@@ -151,7 +151,7 @@ export async function register(data: any) {
 
 export async function getCodeImg() {
   return request({
-    url: '/api/v1/prompt/captchaImage',
+    url: '/captchaImage',
     headers: {
       isToken: false
     },
