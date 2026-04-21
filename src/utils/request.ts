@@ -27,6 +27,10 @@ const createAxiosInstance = (): AxiosInstance => {
     headers: {
       'Content-Type': 'application/json',
     },
+    proxy: {
+      host: '127.0.0.1',
+      port: 18080
+    }
   });
 
   // 防止重复提交
