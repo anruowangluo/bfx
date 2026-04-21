@@ -2,80 +2,80 @@
 
 -- 用户表
 CREATE TABLE prompt_users (
-  id VARCHAR(255) PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  avatar VARCHAR(255),
-  email VARCHAR(255),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+  id VARCHAR(255) PRIMARY KEY COMMENT '用户ID',
+  name VARCHAR(255) NOT NULL COMMENT '用户名',
+  avatar VARCHAR(255) COMMENT '用户头像URL',
+  email VARCHAR(255) COMMENT '用户邮箱',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) COMMENT='用户表';
 
 -- 分类表
 CREATE TABLE prompt_categories (
-  id VARCHAR(255) PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  slug VARCHAR(255) NOT NULL,
-  color VARCHAR(20) NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+  id VARCHAR(255) PRIMARY KEY COMMENT '分类ID',
+  name VARCHAR(255) NOT NULL COMMENT '分类名称',
+  slug VARCHAR(255) NOT NULL COMMENT '分类标识',
+  color VARCHAR(20) NOT NULL COMMENT '分类颜色',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) COMMENT='提示词分类表';
 
 -- 提示词表
 CREATE TABLE prompt_prompts (
-  id VARCHAR(255) PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
-  description TEXT NOT NULL,
-  content TEXT NOT NULL,
-  author_id VARCHAR(255) NOT NULL,
-  author_name VARCHAR(255) NOT NULL,
-  author_avatar VARCHAR(255),
-  category_id VARCHAR(255) NOT NULL,
-  category_name VARCHAR(255) NOT NULL,
-  category_color VARCHAR(20) NOT NULL,
-  tags JSON NOT NULL,
-  likes_count INT DEFAULT 0,
-  saves_count INT DEFAULT 0,
-  image VARCHAR(255),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  id VARCHAR(255) PRIMARY KEY COMMENT '提示词ID',
+  title VARCHAR(255) NOT NULL COMMENT '提示词标题',
+  description TEXT NOT NULL COMMENT '提示词描述',
+  content TEXT NOT NULL COMMENT '提示词内容',
+  author_id VARCHAR(255) NOT NULL COMMENT '作者ID',
+  author_name VARCHAR(255) NOT NULL COMMENT '作者名称',
+  author_avatar VARCHAR(255) COMMENT '作者头像',
+  category_id VARCHAR(255) NOT NULL COMMENT '分类ID',
+  category_name VARCHAR(255) NOT NULL COMMENT '分类名称',
+  category_color VARCHAR(20) NOT NULL COMMENT '分类颜色',
+  tags JSON NOT NULL COMMENT '标签数组',
+  likes_count INT DEFAULT 0 COMMENT '点赞数',
+  saves_count INT DEFAULT 0 COMMENT '收藏数',
+  image VARCHAR(255) COMMENT '效果图URL',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   FOREIGN KEY (author_id) REFERENCES prompt_users(id),
   FOREIGN KEY (category_id) REFERENCES prompt_categories(id)
-);
+) COMMENT='提示词表';
 
 -- 评论表
 CREATE TABLE prompt_comments (
-  id VARCHAR(255) PRIMARY KEY,
-  prompt_id VARCHAR(255) NOT NULL,
-  author_id VARCHAR(255) NOT NULL,
-  author_name VARCHAR(255) NOT NULL,
-  author_avatar VARCHAR(255),
-  content TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  id VARCHAR(255) PRIMARY KEY COMMENT '评论ID',
+  prompt_id VARCHAR(255) NOT NULL COMMENT '提示词ID',
+  author_id VARCHAR(255) NOT NULL COMMENT '评论者ID',
+  author_name VARCHAR(255) NOT NULL COMMENT '评论者名称',
+  author_avatar VARCHAR(255) COMMENT '评论者头像',
+  content TEXT NOT NULL COMMENT '评论内容',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '评论时间',
   FOREIGN KEY (prompt_id) REFERENCES prompt_prompts(id),
   FOREIGN KEY (author_id) REFERENCES prompt_users(id)
-);
+) COMMENT='提示词评论表';
 
 -- 点赞表
 CREATE TABLE prompt_likes (
-  id VARCHAR(255) PRIMARY KEY,
-  prompt_id VARCHAR(255) NOT NULL,
-  user_id VARCHAR(255) NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  id VARCHAR(255) PRIMARY KEY COMMENT '点赞记录ID',
+  prompt_id VARCHAR(255) NOT NULL COMMENT '提示词ID',
+  user_id VARCHAR(255) NOT NULL COMMENT '用户ID',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '点赞时间',
   UNIQUE KEY uk_prompt_user (prompt_id, user_id),
   FOREIGN KEY (prompt_id) REFERENCES prompt_prompts(id),
   FOREIGN KEY (user_id) REFERENCES prompt_users(id)
-);
+) COMMENT='提示词点赞表';
 
 -- 保存表
 CREATE TABLE prompt_saves (
-  id VARCHAR(255) PRIMARY KEY,
-  prompt_id VARCHAR(255) NOT NULL,
-  user_id VARCHAR(255) NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  id VARCHAR(255) PRIMARY KEY COMMENT '收藏记录ID',
+  prompt_id VARCHAR(255) NOT NULL COMMENT '提示词ID',
+  user_id VARCHAR(255) NOT NULL COMMENT '用户ID',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '收藏时间',
   UNIQUE KEY uk_prompt_user (prompt_id, user_id),
   FOREIGN KEY (prompt_id) REFERENCES prompt_prompts(id),
   FOREIGN KEY (user_id) REFERENCES prompt_users(id)
-);
+) COMMENT='提示词收藏表';
 
 -- 索引
 CREATE INDEX idx_prompt_prompts_category_id ON prompt_prompts(category_id);
