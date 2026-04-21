@@ -91,11 +91,7 @@ const Home = () => {
       
       // 直接设置滚动位置，不使用动画效果
       if (scrollRef.current) {
-        // 禁用滚动动画
-        scrollRef.current.scrollTo({
-          top: position,
-          behavior: 'instant'
-        })
+        scrollRef.current.scrollTop = position
       }
     }
   }, [location.pathname])
