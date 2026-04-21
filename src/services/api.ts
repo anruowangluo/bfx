@@ -1,38 +1,4 @@
-import axios from 'axios';
-
-// 创建axios实例
-const apiClient = axios.create({
-  baseURL: 'http://w33299s260.zicp.vip/api/v1/prompt',
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// 请求拦截器
-apiClient.interceptors.request.use(
-  (config) => {
-    // 可以在这里添加token等认证信息
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-// 响应拦截器
-apiClient.interceptors.response.use(
-  (response) => {
-    if (response.data && response.data.success) {
-      return response.data.data;
-    }
-    return response.data;
-  },
-  (error) => {
-    console.error('API请求错误:', error);
-    return Promise.reject(error);
-  }
-);
+import { get, post } from '../utils/request';
 
 // Types
 export interface Prompt {
@@ -88,8 +54,8 @@ class ApiService {
         params.category_id = categoryId;
       }
       
-      const response = await apiClient.get('/prompts', { params });
-      return response as unknown as Prompt[];
+      const response = await get<Prompt[]>('/prompts', params);
+      return response;
     } catch (error) {
       console.error('获取提示词列表失败:', error);
       // 返回mock数据作为fallback
@@ -99,8 +65,8 @@ class ApiService {
 
   async getPromptById(id: string): Promise<Prompt | null> {
     try {
-      const response = await apiClient.get(`/prompts/${id}`);
-      return response as unknown as Prompt;
+      const response = await get<Prompt>(`/prompts/${id}`);
+      return response;
     } catch (error) {
       console.error('获取提示词详情失败:', error);
       // 返回mock数据作为fallback
@@ -110,8 +76,8 @@ class ApiService {
 
   async createPrompt(prompt: Omit<Prompt, 'id' | 'created_at' | 'updated_at' | 'likes_count' | 'saves_count'>): Promise<Prompt | null> {
     try {
-      const response = await apiClient.post('/prompts', prompt);
-      return response as unknown as Prompt;
+      const response = await post<Prompt>('/prompts', prompt);
+      return response;
     } catch (error) {
       console.error('创建提示词失败:', error);
       return null;
@@ -120,7 +86,7 @@ class ApiService {
 
   async likePrompt(promptId: string): Promise<boolean> {
     try {
-      await apiClient.post(`/prompts/${promptId}/like`);
+      await post(`/prompts/${promptId}/like`);
       return true;
     } catch (error) {
       console.error('点赞提示词失败:', error);
@@ -130,7 +96,7 @@ class ApiService {
 
   async savePrompt(promptId: string): Promise<boolean> {
     try {
-      await apiClient.post(`/prompts/${promptId}/save`);
+      await post(`/prompts/${promptId}/save`);
       return true;
     } catch (error) {
       console.error('保存提示词失败:', error);
@@ -141,8 +107,8 @@ class ApiService {
   // Categories
   async getCategories(): Promise<Category[]> {
     try {
-      const response = await apiClient.get('/categories');
-      return response as unknown as Category[];
+      const response = await get<Category[]>('/categories');
+      return response;
     } catch (error) {
       console.error('获取分类列表失败:', error);
       // 返回mock数据作为fallback
@@ -153,8 +119,8 @@ class ApiService {
   // Comments
   async getComments(promptId: string): Promise<Comment[]> {
     try {
-      const response = await apiClient.get(`/prompts/${promptId}/comments`);
-      return response as unknown as Comment[];
+      const response = await get<Comment[]>(`/prompts/${promptId}/comments`);
+      return response;
     } catch (error) {
       console.error('获取评论列表失败:', error);
       // 返回mock数据作为fallback
@@ -164,10 +130,10 @@ class ApiService {
 
   async createComment(comment: Omit<Comment, 'id' | 'created_at'>): Promise<Comment | null> {
     try {
-      const response = await apiClient.post(`/prompts/${comment.prompt_id}/comments`, {
+      const response = await post<Comment>(`/prompts/${comment.prompt_id}/comments`, {
         content: comment.content,
       });
-      return response as unknown as Comment;
+      return response;
     } catch (error) {
       console.error('创建评论失败:', error);
       return null;
@@ -177,8 +143,8 @@ class ApiService {
   // Users
   async getUserById(userId: string): Promise<User | null> {
     try {
-      const response = await apiClient.get(`/users/${userId}`);
-      return response as unknown as User;
+      const response = await get<User>(`/users/${userId}`);
+      return response;
     } catch (error) {
       console.error('获取用户信息失败:', error);
       return null;
