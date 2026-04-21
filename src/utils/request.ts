@@ -28,13 +28,15 @@ const createAxiosInstance = (): AxiosInstance => {
   // 响应拦截器
   instance.interceptors.response.use(
     (response: AxiosResponse) => {
+      console.log('API 请求成功:', response.config.url, response.status);
       if (response.data && response.data.success) {
         return response.data.data;
       }
       return response.data;
     },
     (error) => {
-      console.error('API 请求错误:', error);
+      console.error('API 请求错误:', error.config?.url, error.message, error.response?.status);
+      console.error('错误详情:', error);
       return Promise.reject(error);
     }
   );
