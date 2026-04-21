@@ -14,6 +14,14 @@ export default defineConfig({
     watch: {
       usePolling: true,
       ignored: ['**/node_modules/**', '**/.git/**']
+    },
+    proxy: {
+      '/api': {
+        target: 'http://w33299s260.zicp.vip',
+        changeOrigin: true,
+        secure: false,
+        ws: true
+      }
     }
   },
   plugins: [
