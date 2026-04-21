@@ -1,4 +1,38 @@
-import { supabase } from '../lib/supabase';
+import axios from 'axios';
+
+// 创建axios实例
+const apiClient = axios.create({
+  baseURL: '/api/v1',
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// 请求拦截器
+apiClient.interceptors.request.use(
+  (config) => {
+    // 可以在这里添加token等认证信息
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// 响应拦截器
+apiClient.interceptors.response.use(
+  (response) => {
+    if (response.data && response.data.success) {
+      return response.data.data;
+    }
+    return response.data;
+  },
+  (error) => {
+    console.error('API请求错误:', error);
+    return Promise.reject(error);
+  }
+);
 
 // Types
 export interface Prompt {
@@ -49,140 +83,57 @@ class ApiService {
   // Prompts
   async getPrompts(categoryId?: string): Promise<Prompt[]> {
     try {
-      let query = supabase
-        .from('prompts')
-        .select(`
-          id,
-          title,
-          description,
-          content,
-          author_id,
-          author_name,
-          author_avatar,
-          category_id,
-          category_name,
-          category_color,
-          tags,
-          likes_count,
-          saves_count,
-          created_at,
-          updated_at,
-          image
-        `);
-
+      const params: any = {};
       if (categoryId && categoryId !== 'all') {
-        query = query.eq('category_id', categoryId);
+        params.category_id = categoryId;
       }
-
-      const { data, error } = await query.order('created_at', { ascending: false });
       
-      if (error) {
-        console.error('Error fetching prompts:', error);
-        // Return mock data as fallback
-        return this.getMockPrompts(categoryId);
-      }
-
-      return data as Prompt[];
+      const response = await apiClient.get('/prompts', { params });
+      return response as unknown as Prompt[];
     } catch (error) {
-      console.error('Error fetching prompts:', error);
-      // Return mock data as fallback
+      console.error('获取提示词列表失败:', error);
+      // 返回mock数据作为fallback
       return this.getMockPrompts(categoryId);
     }
   }
 
   async getPromptById(id: string): Promise<Prompt | null> {
     try {
-      const { data, error } = await supabase
-        .from('prompts')
-        .select(`
-          id,
-          title,
-          description,
-          content,
-          author_id,
-          author_name,
-          author_avatar,
-          category_id,
-          category_name,
-          category_color,
-          tags,
-          likes_count,
-          saves_count,
-          created_at,
-          updated_at,
-          image
-        `)
-        .eq('id', id)
-        .single();
-
-      if (error) {
-        console.error('Error fetching prompt:', error);
-        // Return mock data as fallback
-        return this.getMockPrompts().find(p => p.id === id) || null;
-      }
-
-      return data as Prompt;
+      const response = await apiClient.get(`/prompts/${id}`);
+      return response as unknown as Prompt;
     } catch (error) {
-      console.error('Error fetching prompt:', error);
-      // Return mock data as fallback
+      console.error('获取提示词详情失败:', error);
+      // 返回mock数据作为fallback
       return this.getMockPrompts().find(p => p.id === id) || null;
     }
   }
 
   async createPrompt(prompt: Omit<Prompt, 'id' | 'created_at' | 'updated_at' | 'likes_count' | 'saves_count'>): Promise<Prompt | null> {
     try {
-      const { data, error } = await supabase
-        .from('prompts')
-        .insert({
-          ...prompt,
-          likes_count: 0,
-          saves_count: 0
-        })
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error creating prompt:', error);
-        return null;
-      }
-
-      return data as Prompt;
+      const response = await apiClient.post('/prompts', prompt);
+      return response as unknown as Prompt;
     } catch (error) {
-      console.error('Error creating prompt:', error);
+      console.error('创建提示词失败:', error);
       return null;
     }
   }
 
   async likePrompt(promptId: string): Promise<boolean> {
     try {
-      const { error } = await supabase
-        .rpc('like_prompt', { prompt_id: promptId });
-
-      if (error) {
-        console.error('Error liking prompt:', error);
-        return false;
-      }
-
+      await apiClient.post(`/prompts/${promptId}/like`);
       return true;
     } catch (error) {
-      console.error('Error liking prompt:', error);
+      console.error('点赞提示词失败:', error);
       return false;
     }
   }
 
   async savePrompt(promptId: string): Promise<boolean> {
     try {
-      const { error } = await supabase
-        .rpc('save_prompt', { prompt_id: promptId });
-
-      if (error) {
-        console.error('Error saving prompt:', error);
-        return false;
-      }
-
+      await apiClient.post(`/prompts/${promptId}/save`);
       return true;
     } catch (error) {
-      console.error('Error saving prompt:', error);
+      console.error('保存提示词失败:', error);
       return false;
     }
   }
@@ -190,21 +141,11 @@ class ApiService {
   // Categories
   async getCategories(): Promise<Category[]> {
     try {
-      const { data, error } = await supabase
-        .from('categories')
-        .select('id, name, slug, color')
-        .order('name');
-
-      if (error) {
-        console.error('Error fetching categories:', error);
-        // Return mock data as fallback
-        return this.getMockCategories();
-      }
-
-      return data as Category[];
+      const response = await apiClient.get('/categories');
+      return response as unknown as Category[];
     } catch (error) {
-      console.error('Error fetching categories:', error);
-      // Return mock data as fallback
+      console.error('获取分类列表失败:', error);
+      // 返回mock数据作为fallback
       return this.getMockCategories();
     }
   }
@@ -212,50 +153,23 @@ class ApiService {
   // Comments
   async getComments(promptId: string): Promise<Comment[]> {
     try {
-      const { data, error } = await supabase
-        .from('comments')
-        .select(`
-          id,
-          prompt_id,
-          author_id,
-          author_name,
-          author_avatar,
-          content,
-          created_at
-        `)
-        .eq('prompt_id', promptId)
-        .order('created_at', { ascending: true });
-
-      if (error) {
-        console.error('Error fetching comments:', error);
-        // Return mock data as fallback
-        return this.getMockComments(promptId);
-      }
-
-      return data as Comment[];
+      const response = await apiClient.get(`/prompts/${promptId}/comments`);
+      return response as unknown as Comment[];
     } catch (error) {
-      console.error('Error fetching comments:', error);
-      // Return mock data as fallback
+      console.error('获取评论列表失败:', error);
+      // 返回mock数据作为fallback
       return this.getMockComments(promptId);
     }
   }
 
   async createComment(comment: Omit<Comment, 'id' | 'created_at'>): Promise<Comment | null> {
     try {
-      const { data, error } = await supabase
-        .from('comments')
-        .insert(comment)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error creating comment:', error);
-        return null;
-      }
-
-      return data as Comment;
+      const response = await apiClient.post(`/prompts/${comment.prompt_id}/comments`, {
+        content: comment.content,
+      });
+      return response as unknown as Comment;
     } catch (error) {
-      console.error('Error creating comment:', error);
+      console.error('创建评论失败:', error);
       return null;
     }
   }
@@ -263,20 +177,10 @@ class ApiService {
   // Users
   async getUserById(userId: string): Promise<User | null> {
     try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('id, name, avatar, email')
-        .eq('id', userId)
-        .single();
-
-      if (error) {
-        console.error('Error fetching user:', error);
-        return null;
-      }
-
-      return data as User;
+      const response = await apiClient.get(`/users/${userId}`);
+      return response as unknown as User;
     } catch (error) {
-      console.error('Error fetching user:', error);
+      console.error('获取用户信息失败:', error);
       return null;
     }
   }
