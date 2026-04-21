@@ -1,4 +1,4 @@
--- 建表SQL
+-- 建表SQL (MySQL)
 
 -- 用户表
 CREATE TABLE prompt_users (
@@ -7,7 +7,7 @@ CREATE TABLE prompt_users (
   avatar VARCHAR(255),
   email VARCHAR(255),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- 分类表
@@ -17,7 +17,7 @@ CREATE TABLE prompt_categories (
   slug VARCHAR(255) NOT NULL,
   color VARCHAR(20) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- 提示词表
@@ -32,12 +32,12 @@ CREATE TABLE prompt_prompts (
   category_id VARCHAR(255) NOT NULL,
   category_name VARCHAR(255) NOT NULL,
   category_color VARCHAR(20) NOT NULL,
-  tags JSONB NOT NULL,
-  likes_count INTEGER DEFAULT 0,
-  saves_count INTEGER DEFAULT 0,
+  tags JSON NOT NULL,
+  likes_count INT DEFAULT 0,
+  saves_count INT DEFAULT 0,
   image VARCHAR(255),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (author_id) REFERENCES prompt_users(id),
   FOREIGN KEY (category_id) REFERENCES prompt_categories(id)
 );
@@ -61,7 +61,7 @@ CREATE TABLE prompt_likes (
   prompt_id VARCHAR(255) NOT NULL,
   user_id VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE(prompt_id, user_id),
+  UNIQUE KEY uk_prompt_user (prompt_id, user_id),
   FOREIGN KEY (prompt_id) REFERENCES prompt_prompts(id),
   FOREIGN KEY (user_id) REFERENCES prompt_users(id)
 );
@@ -72,7 +72,7 @@ CREATE TABLE prompt_saves (
   prompt_id VARCHAR(255) NOT NULL,
   user_id VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE(prompt_id, user_id),
+  UNIQUE KEY uk_prompt_user (prompt_id, user_id),
   FOREIGN KEY (prompt_id) REFERENCES prompt_prompts(id),
   FOREIGN KEY (user_id) REFERENCES prompt_users(id)
 );
@@ -87,28 +87,28 @@ CREATE INDEX idx_prompt_saves_prompt_id ON prompt_saves(prompt_id);
 CREATE INDEX idx_prompt_saves_user_id ON prompt_saves(user_id);
 
 -- 函数：点赞提示词
-CREATE OR REPLACE FUNCTION like_prompt(prompt_id_param VARCHAR(255))
-RETURNS INTEGER AS $$
+DELIMITER //
+CREATE PROCEDURE like_prompt(IN prompt_id_param VARCHAR(255), OUT likes_count_out INT)
 BEGIN
   UPDATE prompt_prompts
   SET likes_count = likes_count + 1
   WHERE id = prompt_id_param;
   
-  RETURN (SELECT likes_count FROM prompt_prompts WHERE id = prompt_id_param);
-END;
-$$ LANGUAGE plpgsql;
+  SELECT likes_count INTO likes_count_out FROM prompt_prompts WHERE id = prompt_id_param;
+END //
+DELIMITER ;
 
 -- 函数：保存提示词
-CREATE OR REPLACE FUNCTION save_prompt(prompt_id_param VARCHAR(255))
-RETURNS INTEGER AS $$
+DELIMITER //
+CREATE PROCEDURE save_prompt(IN prompt_id_param VARCHAR(255), OUT saves_count_out INT)
 BEGIN
   UPDATE prompt_prompts
   SET saves_count = saves_count + 1
   WHERE id = prompt_id_param;
   
-  RETURN (SELECT saves_count FROM prompt_prompts WHERE id = prompt_id_param);
-END;
-$$ LANGUAGE plpgsql;
+  SELECT saves_count INTO saves_count_out FROM prompt_prompts WHERE id = prompt_id_param;
+END //
+DELIMITER ;
 
 -- 初始数据
 INSERT INTO prompt_users (id, name, avatar, email) VALUES
