@@ -186,7 +186,7 @@ const Home = () => {
       ) : (
         <>
           {/* Prompts List */}
-          <div className="grid grid-cols-2 gap-3">
+          <div key={selectedCategory} className="grid grid-cols-2 gap-3 animate-fade-in">
             {filteredPrompts.map((prompt) => (
               <Link
                 key={prompt.id}
