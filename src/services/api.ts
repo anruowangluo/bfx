@@ -65,7 +65,7 @@ const mockPrompts: Prompt[] = [
     saves_count: 85,
     created_at: "2026-04-21T13:48:05Z",
     updated_at: "2026-04-21T13:48:05Z",
-    image: "https://trae-api-cn.mchost.guru/api/ide/v1/text-to-image?prompt=realistic%20portrait%20painting%20of%20a%20person%20with%20detailed%20features&image_size=landscape_4_3"
+    image: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=realistic%20portrait%20painting%20of%20a%20person%20with%20detailed%20features&image_size=landscape_4_3"
   },
   {
     id: "2",
@@ -83,7 +83,7 @@ const mockPrompts: Prompt[] = [
     saves_count: 62,
     created_at: "2026-04-21T13:48:05Z",
     updated_at: "2026-04-21T13:48:05Z",
-    image: "https://trae-api-cn.mchost.guru/api/ide/v1/text-to-image?prompt=blog%20article%20outline%20with%20topics%20and%20structure&image_size=landscape_4_3"
+    image: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=blog%20article%20outline%20with%20topics%20and%20structure&image_size=landscape_4_3"
   },
   {
     id: "3",
@@ -101,7 +101,7 @@ const mockPrompts: Prompt[] = [
     saves_count: 110,
     created_at: "2026-04-21T13:48:05Z",
     updated_at: "2026-04-21T13:48:05Z",
-    image: "https://trae-api-cn.mchost.guru/api/ide/v1/text-to-image?prompt=javascript%20code%20debugging%20with%20errors%20highlighted&image_size=landscape_4_3"
+    image: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=javascript%20code%20debugging%20with%20errors%20highlighted&image_size=landscape_4_3"
   },
   {
     id: "4",
@@ -119,7 +119,7 @@ const mockPrompts: Prompt[] = [
     saves_count: 55,
     created_at: "2026-04-21T13:48:05Z",
     updated_at: "2026-04-21T13:48:05Z",
-    image: "https://trae-api-cn.mchost.guru/api/ide/v1/text-to-image?prompt=professional%20logo%20design%20with%20multiple%20variations&image_size=landscape_4_3"
+    image: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20logo%20design%20with%20multiple%20variations&image_size=landscape_4_3"
   },
   {
     id: "5",
@@ -137,7 +137,7 @@ const mockPrompts: Prompt[] = [
     saves_count: 98,
     created_at: "2026-04-21T13:48:05Z",
     updated_at: "2026-04-21T13:48:05Z",
-    image: "https://trae-api-cn.mchost.guru/api/ide/v1/text-to-image?prompt=business%20plan%20document%20with%20charts%20and%20graphs&image_size=landscape_4_3"
+    image: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=business%20plan%20document%20with%20charts%20and%20graphs&image_size=landscape_4_3"
   }
 ];
 
