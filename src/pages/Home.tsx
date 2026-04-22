@@ -13,6 +13,7 @@ const Home = () => {
   })
   const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
+  const [animDirection, setAnimDirection] = useState<'left' | 'right' | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   const scrollPositionRef = useRef(0)
   const touchStartX = useRef(0)
@@ -126,12 +127,14 @@ const Home = () => {
       const currentIndex = categoryIds.indexOf(selectedCategory)
       
       if (diff > 0 && currentIndex > 0) {
-        // 向右滑动，切换到上一个分类
+        // 向右滑动，切换到上一个分类，从左边推入
+        setAnimDirection('left')
         const prevCategory = categoryIds[currentIndex - 1]
         setSelectedCategory(prevCategory)
         sessionStorage.setItem('homeSelectedCategory', prevCategory)
       } else if (diff < 0 && currentIndex < categoryIds.length - 1) {
-        // 向左滑动，切换到下一个分类
+        // 向左滑动，切换到下一个分类，从右边推入
+        setAnimDirection('right')
         const nextCategory = categoryIds[currentIndex + 1]
         setSelectedCategory(nextCategory)
         sessionStorage.setItem('homeSelectedCategory', nextCategory)
@@ -152,6 +155,7 @@ const Home = () => {
         <div className="flex space-x-3">
           <button
             onClick={() => {
+              setAnimDirection('right')
               setSelectedCategory('all');
               sessionStorage.setItem('homeSelectedCategory', 'all');
             }}
@@ -163,6 +167,7 @@ const Home = () => {
             <button
               key={category.id}
               onClick={() => {
+                setAnimDirection('right')
                 setSelectedCategory(category.id);
                 sessionStorage.setItem('homeSelectedCategory', category.id);
               }}
@@ -186,7 +191,10 @@ const Home = () => {
       ) : (
         <>
           {/* Prompts List */}
-          <div key={selectedCategory} className="grid grid-cols-2 gap-3 animate-fade-in">
+          <div 
+            key={selectedCategory} 
+            className={`grid grid-cols-2 gap-3 ${animDirection === 'left' ? 'animate-slide-in-left' : animDirection === 'right' ? 'animate-slide-in-right' : 'animate-fade-in'}`}
+          >
             {filteredPrompts.map((prompt) => (
               <Link
                 key={prompt.id}

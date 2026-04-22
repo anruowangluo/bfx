@@ -63,11 +63,11 @@ input, textarea {
   animation: fadeIn 0.3s ease-out;
 }
 
-/* 分类切换动画 */
-@keyframes slideIn {
+/* 分类切换动画 - 从右边推入 */
+@keyframes slideInRight {
   from {
     opacity: 0;
-    transform: translateX(20px);
+    transform: translateX(30px);
   }
   to {
     opacity: 1;
@@ -75,6 +75,22 @@ input, textarea {
   }
 }
 
-.animate-slide-in {
-  animation: slideIn 0.3s ease-out;
+.animate-slide-in-right {
+  animation: slideInRight 0.3s ease-out;
+}
+
+/* 分类切换动画 - 从左边推入 */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.3s ease-out;
 }
