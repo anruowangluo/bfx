@@ -1,121 +1,110 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Search, Menu, X, User, LogIn, LogOut, Plus } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Search, ArrowLeft, User, LogIn } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 
 const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const location = useLocation()
   const navigate = useNavigate()
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  const [showSearch, setShowSearch] = useState(false)
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    setIsLoggedIn(false)
-    navigate('/')
+  useEffect(() => {
+    // 检查用户登录状态
+    const checkAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session) {
+          setIsLoggedIn(true)
+          setUser(session.user)
+        }
+      } catch (error) {
+        // 忽略Supabase连接错误，使用默认的未登录状态
+        console.log('Supabase connection error:', error)
+      }
+    }
+    checkAuth()
+  }, [])
+
+  // 根据当前路由判断显示什么内容
+  const isHomePage = location.pathname === '/'
+  const isPromptDetailPage = location.pathname.startsWith('/prompt')
+  const isLoginPage = location.pathname === '/login' || location.pathname === '/register'
+  const isCreatePage = location.pathname === '/create'
+  const isProfilePage = location.pathname === '/profile'
+  const isTabbarPage = isHomePage || isCreatePage || isProfilePage
+
+  const getPageTitle = () => {
+    if (isHomePage) return '提示词分享'
+    if (isPromptDetailPage) return '提示词详情'
+    if (isCreatePage) return '创建提示词'
+    if (isProfilePage) return '我的'
+    if (location.pathname === '/login') return '登录'
+    if (location.pathname === '/register') return '注册'
+    return '提示词分享'
   }
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-sm">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold text-indigo-600">
-          PromptShare
-        </Link>
-
-        <div className="hidden md:flex items-center space-x-4">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search prompts..."
-              className="pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            />
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-          </div>
-          <Link to="/create" className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors">
-            <Plus className="h-4 w-4" />
-            Create
-          </Link>
-          {isLoggedIn ? (
-            <div className="flex items-center gap-4">
-              <Link to="/profile" className="flex items-center gap-2">
-                <User className="h-6 w-6 text-gray-600" />
-              </Link>
+    <header className="sticky top-0 z-40 bg-white border-b border-gray-100 safe-area-top">
+      <div className="flex items-center h-14 px-4">
+        {/* 左侧 - 返回按钮或居中显示的内容 */}
+        <div className="flex items-center flex-1 justify-center">
+          {!isTabbarPage ? (
+            <div className="w-full flex items-center">
               <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 text-gray-600 hover:text-red-500"
+                onClick={() => navigate(-1)}
+                className="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors"
               >
-                <LogOut className="h-5 w-5" />
-                Logout
+                <ArrowLeft className="h-5 w-5 text-gray-700" />
               </button>
             </div>
+          ) : isHomePage ? (
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <div className="w-4 h-4 bg-white rounded-sm"></div>
+              </div>
+              <h1 className="text-lg font-bold text-gray-900">提示词分享</h1>
+            </div>
           ) : (
-            <Link to="/login" className="flex items-center gap-2 text-gray-600 hover:text-indigo-600">
-              <LogIn className="h-5 w-5" />
-              Login
-            </Link>
+            <h1 className="text-lg font-bold text-gray-900">{getPageTitle()}</h1>
           )}
         </div>
 
-        <button
-          className="md:hidden text-gray-600"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
-      </div>
-
-      {/* Mobile menu */}
-      {isMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200">
-          <div className="container mx-auto px-4 py-3 space-y-3">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search prompts..."
-                className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              />
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-            </div>
-            <Link
-              to="/create"
-              className="block w-full text-center px-4 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors"
-            >
-              Create Prompt
-            </Link>
-            {isLoggedIn ? (
-              <div className="space-y-2">
-                <Link
-                  to="/profile"
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100"
-                >
-                  <User className="h-5 w-5 text-gray-600" />
-                  Profile
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center gap-2 w-full px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-red-500"
-                >
-                  <LogOut className="h-5 w-5" />
-                  Logout
-                </button>
-              </div>
-            ) : (
-              <div className="space-y-2">
+        {/* 右侧 - 操作按钮 */}
+        <div className="flex items-center gap-2 absolute right-4">
+          {isHomePage && (
+            <>
+              <button
+                onClick={() => setShowSearch(!showSearch)}
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+              >
+                <Search className="h-5 w-5 text-gray-700" />
+              </button>
+              {!isLoggedIn && (
                 <Link
                   to="/login"
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100"
+                  className="p-2 rounded-full hover:bg-gray-100 transition-colors"
                 >
-                  <LogIn className="h-5 w-5 text-gray-600" />
-                  Login
+                  <LogIn className="h-5 w-5 text-gray-700" />
                 </Link>
-                <Link
-                  to="/register"
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100"
-                >
-                  <User className="h-5 w-5 text-gray-600" />
-                  Register
-                </Link>
-              </div>
-            )}
+              )}
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* 搜索栏 - 只在首页显示 */}
+      {isHomePage && showSearch && (
+        <div className="px-4 pb-3 animate-in slide-in-from-top duration-200">
+          <div className="relative">
+            <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="搜索提示词..."
+              className="w-full pl-10 pr-4 py-2.5 bg-gray-100 rounded-xl border-0 focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all text-base"
+              autoFocus
+            />
           </div>
         </div>
       )}

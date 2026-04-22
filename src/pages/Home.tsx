@@ -1,150 +1,177 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { supabase } from '../lib/supabase'
-
-// Mock data for prompts
-const mockPrompts = [
-  {
-    id: '1',
-    title: 'Realistic Portraits',
-    description: 'Create realistic human portraits with detailed features',
-    content: 'Create a realistic portrait of a [age] year old [gender] with [hair color] hair and [eye color] eyes. The portrait should be in [style] style with [lighting] lighting.',
-    author_id: 'user1',
-    author_name: 'Artist123',
-    category_id: '1',
-    category_name: 'Art',
-    category_color: '#F43F5E',
-    tags: ['portrait', 'realistic', 'human'],
-    likes_count: 120,
-    saves_count: 85,
-    created_at: '2026-04-01T10:00:00Z'
-  },
-  {
-    id: '2',
-    title: 'Blog Post Outline',
-    description: 'Generate outlines for engaging blog posts',
-    content: 'Create a detailed outline for a blog post about [topic]. The outline should include an introduction, [number] main sections with subpoints, and a conclusion. Each section should have a catchy heading and 2-3 key points to discuss.',
-    author_id: 'user2',
-    author_name: 'Writer456',
-    category_id: '2',
-    category_name: 'Writing',
-    category_color: '#6366F1',
-    tags: ['blog', 'writing', 'outline'],
-    likes_count: 95,
-    saves_count: 62,
-    created_at: '2026-04-02T14:30:00Z'
-  },
-  {
-    id: '3',
-    title: 'JavaScript Debugger',
-    description: 'Debug JavaScript code and find errors',
-    content: 'Analyze the following JavaScript code and identify any errors or potential issues. Explain what the code is supposed to do, whats going wrong, and how to fix it.\n\n```javascript\n[code]\n```',
-    author_id: 'user3',
-    author_name: 'Coder789',
-    category_id: '3',
-    category_name: 'Coding',
-    category_color: '#10B981',
-    tags: ['javascript', 'debugging', 'code'],
-    likes_count: 150,
-    saves_count: 110,
-    created_at: '2026-04-03T09:15:00Z'
-  },
-  {
-    id: '4',
-    title: 'Logo Design',
-    description: 'Create professional logo designs',
-    content: 'Design a logo for a [type of business] called [business name]. The logo should be [style] style, with [color scheme] colors. It should be simple, memorable, and scalable. Include 2-3 variations of the logo.',
-    author_id: 'user4',
-    author_name: 'Designer321',
-    category_id: '4',
-    category_name: 'Design',
-    category_color: '#F59E0B',
-    tags: ['logo', 'design', 'branding'],
-    likes_count: 88,
-    saves_count: 55,
-    created_at: '2026-04-04T11:45:00Z'
-  },
-  {
-    id: '5',
-    title: 'Business Plan',
-    description: 'Create comprehensive business plans',
-    content: 'Create a detailed business plan for a [type of business] business. Include sections for executive summary, market analysis, competitive analysis, marketing strategy, operational plan, financial projections, and appendix. The plan should be professional and actionable.',
-    author_id: 'user5',
-    author_name: 'Entrepreneur654',
-    category_id: '5',
-    category_name: 'Business',
-    category_color: '#8B5CF6',
-    tags: ['business', 'plan', 'startup'],
-    likes_count: 135,
-    saves_count: 98,
-    created_at: '2026-04-05T16:20:00Z'
-  }
-]
-
-// Mock data for categories
-const mockCategories = [
-  { id: '1', name: 'Art', slug: 'art', color: '#F43F5E' },
-  { id: '2', name: 'Writing', slug: 'writing', color: '#6366F1' },
-  { id: '3', name: 'Coding', slug: 'coding', color: '#10B981' },
-  { id: '4', name: 'Design', slug: 'design', color: '#F59E0B' },
-  { id: '5', name: 'Business', slug: 'business', color: '#8B5CF6' }
-]
+import { useState, useEffect, useRef } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import { Search } from 'lucide-react'
+import { getPrompts, getCategories, Prompt, Category } from '../services/api'
 
 const Home = () => {
-  const [prompts, setPrompts] = useState(mockPrompts)
-  const [categories, setCategories] = useState(mockCategories)
-  const [selectedCategory, setSelectedCategory] = useState('all')
+  const location = useLocation()
+  const [prompts, setPrompts] = useState<Prompt[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    // 从sessionStorage中读取保存的分类
+    return sessionStorage.getItem('homeSelectedCategory') || 'all'
+  })
   const [searchTerm, setSearchTerm] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [animDirection, setAnimDirection] = useState<'left' | 'right' | null>(null)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const scrollPositionRef = useRef(0)
+  const touchStartX = useRef(0)
+  const touchEndX = useRef(0)
+
+  // Fetch data from API
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+      try {
+        const [promptsData, categoriesData] = await Promise.all([
+          getPrompts(),
+          getCategories()
+        ])
+        setPrompts(promptsData as Prompt[])
+        setCategories(categoriesData as Category[])
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  // Fetch prompts when category changes
+  useEffect(() => {
+    const fetchPromptsByCategory = async () => {
+      setLoading(true)
+      try {
+        const promptsData = await getPrompts(selectedCategory)
+        setPrompts(promptsData as Prompt[])
+      } catch (error) {
+        console.error('Error fetching prompts by category:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPromptsByCategory()
+  }, [selectedCategory])
 
   // Filter prompts based on selected category and search term
-  const filteredPrompts = prompts.filter(prompt => {
+  const filteredPrompts = prompts.filter((prompt) => {
     const matchesCategory = selectedCategory === 'all' || prompt.category_id === selectedCategory
     const matchesSearch = prompt.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                         prompt.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        prompt.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+                        prompt.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()))
     return matchesCategory && matchesSearch
   })
 
-  return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Search Bar */}
-      <div className="relative mb-8">
-        <input
-          type="text"
-          placeholder="Search prompts..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-        />
-        <svg
-          className="absolute left-3 top-3.5 h-5 w-5 text-gray-400"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          />
-        </svg>
-      </div>
+  // 保存滚动位置
+  useEffect(() => {
+    const handleScroll = () => {
+      if (scrollRef.current) {
+        scrollPositionRef.current = scrollRef.current.scrollTop
+        // 同时保存到sessionStorage，确保页面刷新后也能恢复
+        sessionStorage.setItem('homeScrollPosition', scrollPositionRef.current.toString())
+      }
+    }
 
+    const scrollElement = scrollRef.current
+    if (scrollElement) {
+      scrollElement.addEventListener('scroll', handleScroll)
+    }
+
+    return () => {
+      if (scrollElement) {
+        scrollElement.removeEventListener('scroll', handleScroll)
+      }
+    }
+  }, [])
+
+  // 恢复滚动位置
+  useEffect(() => {
+    if (location.pathname === '/' && !loading && prompts.length > 0) {
+      // 使用requestAnimationFrame确保DOM已经渲染完成
+      requestAnimationFrame(() => {
+        if (scrollRef.current) {
+          // 从sessionStorage中获取保存的滚动位置
+          const savedPosition = sessionStorage.getItem('homeScrollPosition')
+          const position = savedPosition ? parseInt(savedPosition, 10) : 0
+          
+          // 设置滚动位置
+          scrollRef.current.scrollTop = position
+        }
+      })
+    }
+  }, [location.pathname, loading, prompts.length])
+
+  // 处理触摸开始事件
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+  }
+
+  // 处理触摸结束事件
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    touchEndX.current = e.changedTouches[0].clientX
+    handleSwipe()
+  }
+
+  // 处理滑动逻辑
+  const handleSwipe = () => {
+    const swipeThreshold = 50 // 滑动阈值
+    const diff = touchEndX.current - touchStartX.current
+
+    if (Math.abs(diff) > swipeThreshold) {
+      // 找到当前选中的分类索引
+      const categoryIds = ['all', ...categories.map(c => c.id)]
+      const currentIndex = categoryIds.indexOf(selectedCategory)
+      
+      if (diff > 0 && currentIndex > 0) {
+        // 向右滑动，切换到上一个分类，从左边推入
+        setAnimDirection('left')
+        const prevCategory = categoryIds[currentIndex - 1]
+        setSelectedCategory(prevCategory)
+        sessionStorage.setItem('homeSelectedCategory', prevCategory)
+      } else if (diff < 0 && currentIndex < categoryIds.length - 1) {
+        // 向左滑动，切换到下一个分类，从右边推入
+        setAnimDirection('right')
+        const nextCategory = categoryIds[currentIndex + 1]
+        setSelectedCategory(nextCategory)
+        sessionStorage.setItem('homeSelectedCategory', nextCategory)
+      }
+    }
+  }
+
+  return (
+    <div 
+      className="container mx-auto px-4 py-4" 
+      ref={scrollRef} 
+      style={{ minHeight: 'calc(100vh - 10rem)', maxHeight: 'calc(100vh - 10rem)', overflowY: 'auto' }}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       {/* Categories */}
-      <div className="mb-8 overflow-x-auto">
-        <div className="flex space-x-2 pb-2">
+      <div className="mb-4 overflow-x-auto pb-2 -mx-4 px-4">
+        <div className="flex space-x-3">
           <button
-            onClick={() => setSelectedCategory('all')}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedCategory === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+            onClick={() => {
+              setAnimDirection('right')
+              setSelectedCategory('all');
+              sessionStorage.setItem('homeSelectedCategory', 'all');
+            }}
+            className={`px-4 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap ${selectedCategory === 'all' ? 'bg-indigo-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
           >
-            All
+            全部
           </button>
-          {categories.map(category => (
+          {categories.map((category) => (
             <button
               key={category.id}
-              onClick={() => setSelectedCategory(category.id)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedCategory === category.id ? 'text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+              onClick={() => {
+                setAnimDirection('right')
+                setSelectedCategory(category.id);
+                sessionStorage.setItem('homeSelectedCategory', category.id);
+              }}
+              className={`px-4 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap ${selectedCategory === category.id ? 'text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
               style={{ backgroundColor: selectedCategory === category.id ? category.color : 'transparent' }}
             >
               {category.name}
@@ -153,69 +180,91 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Prompts Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredPrompts.map(prompt => (
-          <Link
-            key={prompt.id}
-            to={`/prompt/${prompt.id}`}
-            className="block group"
+      {/* Loading state */}
+      {loading ? (
+        <div className="text-center py-20">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-100 mb-4">
+            <div className="w-8 h-8 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+          </div>
+          <p className="text-gray-500 mb-2">加载中...</p>
+        </div>
+      ) : (
+        <>
+          {/* Prompts List */}
+          <div 
+            key={selectedCategory} 
+            className={`grid grid-cols-2 gap-3 animate__animated ${animDirection === 'left' ? 'animate__slideInLeft' : animDirection === 'right' ? 'animate__slideInRight' : 'animate__fadeIn'}`}
           >
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 group-hover:shadow-md">
-              <div
-                className="h-2"
-                style={{ backgroundColor: prompt.category_color }}
-              />
-              <div className="p-6">
-                <div className="flex items-center mb-3">
-                  <span
-                    className="px-3 py-1 rounded-full text-xs font-medium"
-                    style={{ backgroundColor: `${prompt.category_color}20`, color: prompt.category_color }}
-                  >
-                    {prompt.category_name}
-                  </span>
-                  <div className="ml-auto flex items-center text-gray-500 text-sm">
-                    <span className="mr-3">❤️ {prompt.likes_count}</span>
-                    <span>💾 {prompt.saves_count}</span>
+            {filteredPrompts.map((prompt) => (
+              <Link
+                key={prompt.id}
+                to={`/prompt/${prompt.id}`}
+                className="block group"
+              >
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-200 active:scale-[0.98] h-full flex flex-col">
+                  {prompt.image && (
+                    <div className="w-full h-32 overflow-hidden">
+                      <img 
+                        src={prompt.image} 
+                        alt={prompt.title} 
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                  )}
+                  <div className="p-3 flex-grow">
+                    <div className="flex items-center mb-2">
+                      <span
+                        className="px-2 py-0.5 rounded-full text-xs font-medium"
+                        style={{ backgroundColor: `${prompt.category_color}20`, color: prompt.category_color }}
+                      >
+                        {prompt.category_name}
+                      </span>
+                      <div className="ml-auto flex items-center text-gray-500 text-xs">
+                        <span className="mr-1.5">❤️ {prompt.likes_count}</span>
+                        <span>💾 {prompt.saves_count}</span>
+                      </div>
+                    </div>
+                    <h3 className="text-sm font-bold mb-1 group-hover:text-indigo-600 transition-colors line-clamp-1">
+                      {prompt.title}
+                    </h3>
+                    <p className="text-gray-600 mb-2 line-clamp-2 text-xs">
+                      {prompt.description}
+                    </p>
+                    <div className="flex flex-wrap gap-1 mb-2">
+                      {prompt.tags.slice(0, 2).map((tag, index) => (
+                        <span
+                          key={index}
+                          className="px-1.5 py-0.5 bg-gray-100 rounded-full text-xs text-gray-600"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                      {prompt.tags.length > 2 && (
+                        <span className="px-1.5 py-0.5 bg-gray-100 rounded-full text-xs text-gray-600">
+                          +{prompt.tags.length - 2}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center text-xs text-gray-500">
+                      <span className="line-clamp-1">作者：{prompt.author_name}</span>
+                    </div>
                   </div>
                 </div>
-                <h3 className="text-xl font-bold mb-2 group-hover:text-indigo-600 transition-colors">
-                  {prompt.title}
-                </h3>
-                <p className="text-gray-600 mb-4 line-clamp-2">
-                  {prompt.description}
-                </p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {prompt.tags.slice(0, 3).map((tag, index) => (
-                    <span
-                      key={index}
-                      className="px-2 py-1 bg-gray-100 rounded-full text-xs text-gray-600"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                  {prompt.tags.length > 3 && (
-                    <span className="px-2 py-1 bg-gray-100 rounded-full text-xs text-gray-600">
-                      +{prompt.tags.length - 3}
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center text-sm text-gray-500">
-                  <span>by {prompt.author_name}</span>
-                  <span className="mx-2">•</span>
-                  <span>{new Date(prompt.created_at).toLocaleDateString()}</span>
-                </div>
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
+              </Link>
+            ))}
+          </div>
 
-      {/* No results message */}
-      {filteredPrompts.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">No prompts found. Try a different search or category.</p>
-        </div>
+          {/* No results message */}
+          {filteredPrompts.length === 0 && (
+            <div className="text-center py-20">
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-100 mb-4">
+                <Search className="h-10 w-10 text-gray-400" />
+              </div>
+              <p className="text-gray-500 mb-2">未找到提示词</p>
+              <p className="text-gray-400 text-sm">请尝试其他搜索或分类</p>
+            </div>
+          )}
+        </>
       )}
     </div>
   )

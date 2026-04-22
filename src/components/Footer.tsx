@@ -7,29 +7,29 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
             <Link to="/" className="text-xl font-bold text-indigo-600">
-              PromptShare
+              提示词分享
             </Link>
             <p className="text-sm text-gray-600 mt-1">
-              Share and discover AI prompts
+              分享和发现 AI 提示词
             </p>
           </div>
           <div className="flex flex-wrap justify-center gap-4">
             <Link to="/" className="text-sm text-gray-600 hover:text-indigo-600">
-              Home
+              首页
             </Link>
             <Link to="/create" className="text-sm text-gray-600 hover:text-indigo-600">
-              Create
+              创建
             </Link>
             <Link to="/login" className="text-sm text-gray-600 hover:text-indigo-600">
-              Login
+              登录
             </Link>
             <Link to="/register" className="text-sm text-gray-600 hover:text-indigo-600">
-              Register
+              注册
             </Link>
           </div>
         </div>
         <div className="mt-6 text-center text-sm text-gray-500">
-          © 2026 PromptShare. All rights reserved.
+          © 2026 提示词分享. 保留所有权利.
         </div>
       </div>
     </footer>
