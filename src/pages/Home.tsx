@@ -1,15 +1,20 @@
 import { useState, useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import { getPrompts, getCategories, Prompt, Category } from '../services/api'
 
 const Home = () => {
+  const location = useLocation()
   const [prompts, setPrompts] = useState<Prompt[]>([])
   const [categories, setCategories] = useState<Category[]>([])
-  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    // 从sessionStorage中读取保存的分类
+    return sessionStorage.getItem('homeSelectedCategory') || 'all'
+  })
   const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const scrollPositionRef = useRef(0)
 
   // Fetch data from API
   useEffect(() => {
@@ -58,6 +63,41 @@ const Home = () => {
     return matchesCategory && matchesSearch
   })
 
+  // 保存滚动位置
+  useEffect(() => {
+    const handleScroll = () => {
+      if (scrollRef.current) {
+        scrollPositionRef.current = scrollRef.current.scrollTop
+        // 同时保存到sessionStorage，确保页面刷新后也能恢复
+        sessionStorage.setItem('homeScrollPosition', scrollPositionRef.current.toString())
+      }
+    }
+
+    const scrollElement = scrollRef.current
+    if (scrollElement) {
+      scrollElement.addEventListener('scroll', handleScroll)
+    }
+
+    return () => {
+      if (scrollElement) {
+        scrollElement.removeEventListener('scroll', handleScroll)
+      }
+    }
+  }, [])
+
+  // 恢复滚动位置
+  useEffect(() => {
+    if (scrollRef.current && location.pathname === '/') {
+      // 从sessionStorage中获取保存的滚动位置
+      const savedPosition = sessionStorage.getItem('homeScrollPosition')
+      const position = savedPosition ? parseInt(savedPosition, 10) : 0
+      
+      // 直接设置滚动位置，不使用setTimeout
+      // 确保在DOM渲染后立即设置，避免视觉跳动
+      scrollRef.current.scrollTop = position
+    }
+  }, [location.pathname])
+
   return (
     <div className="container mx-auto px-4 py-4" ref={scrollRef} style={{ maxHeight: 'calc(100vh - 10rem)', overflowY: 'auto' }}>
       {/* Categories */}
@@ -66,6 +106,7 @@ const Home = () => {
           <button
             onClick={() => {
               setSelectedCategory('all');
+              sessionStorage.setItem('homeSelectedCategory', 'all');
             }}
             className={`px-4 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap ${selectedCategory === 'all' ? 'bg-indigo-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
           >
@@ -76,6 +117,7 @@ const Home = () => {
               key={category.id}
               onClick={() => {
                 setSelectedCategory(category.id);
+                sessionStorage.setItem('homeSelectedCategory', category.id);
               }}
               className={`px-4 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap ${selectedCategory === category.id ? 'text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
               style={{ backgroundColor: selectedCategory === category.id ? category.color : 'transparent' }}
