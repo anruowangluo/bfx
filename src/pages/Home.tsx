@@ -7,7 +7,10 @@ const Home = () => {
   const location = useLocation()
   const [prompts, setPrompts] = useState<Prompt[]>([])
   const [categories, setCategories] = useState<Category[]>([])
-  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    // 从sessionStorage中读取保存的分类
+    return sessionStorage.getItem('homeSelectedCategory') || 'all'
+  })
   const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -89,10 +92,12 @@ const Home = () => {
       const savedPosition = sessionStorage.getItem('homeScrollPosition')
       const position = savedPosition ? parseInt(savedPosition, 10) : 0
       
-      // 直接设置滚动位置，不使用动画效果
-      if (scrollRef.current) {
-        scrollRef.current.scrollTop = position
-      }
+      // 使用setTimeout确保DOM已经完全渲染后再设置滚动位置
+      setTimeout(() => {
+        if (scrollRef.current) {
+          scrollRef.current.scrollTop = position
+        }
+      }, 100)
     }
   }, [location.pathname])
 
@@ -102,7 +107,10 @@ const Home = () => {
       <div className="mb-4 overflow-x-auto pb-2 -mx-4 px-4">
         <div className="flex space-x-3">
           <button
-            onClick={() => setSelectedCategory('all')}
+            onClick={() => {
+              setSelectedCategory('all');
+              sessionStorage.setItem('homeSelectedCategory', 'all');
+            }}
             className={`px-4 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap ${selectedCategory === 'all' ? 'bg-indigo-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
           >
             全部
@@ -110,7 +118,10 @@ const Home = () => {
           {categories.map((category) => (
             <button
               key={category.id}
-              onClick={() => setSelectedCategory(category.id)}
+              onClick={() => {
+                setSelectedCategory(category.id);
+                sessionStorage.setItem('homeSelectedCategory', category.id);
+              }}
               className={`px-4 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap ${selectedCategory === category.id ? 'text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
               style={{ backgroundColor: selectedCategory === category.id ? category.color : 'transparent' }}
             >
