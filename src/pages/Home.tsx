@@ -87,14 +87,18 @@ const Home = () => {
 
   // 恢复滚动位置
   useEffect(() => {
-    if (scrollRef.current && location.pathname === '/') {
-      // 从sessionStorage中获取保存的滚动位置
-      const savedPosition = sessionStorage.getItem('homeScrollPosition')
-      const position = savedPosition ? parseInt(savedPosition, 10) : 0
-      
-      // 直接设置滚动位置，不使用setTimeout
-      // 确保在DOM渲染后立即设置，避免视觉跳动
-      scrollRef.current.scrollTop = position
+    if (location.pathname === '/') {
+      // 使用requestAnimationFrame确保DOM已经渲染完成
+      requestAnimationFrame(() => {
+        if (scrollRef.current) {
+          // 从sessionStorage中获取保存的滚动位置
+          const savedPosition = sessionStorage.getItem('homeScrollPosition')
+          const position = savedPosition ? parseInt(savedPosition, 10) : 0
+          
+          // 设置滚动位置
+          scrollRef.current.scrollTop = position
+        }
+      })
     }
   }, [location.pathname])
 
