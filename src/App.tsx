@@ -45,11 +45,11 @@ const AppContent = () => {
 
 function App() {
   return (
-    <AliveScope>
-      <Router>
+    <Router>
+      <AliveScope>
         <AppContent />
-      </Router>
-    </AliveScope>
+      </AliveScope>
+    </Router>
   )
 }
 
