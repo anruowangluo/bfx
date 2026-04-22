@@ -143,7 +143,7 @@ const Home = () => {
     <div 
       className="container mx-auto px-4 py-4" 
       ref={scrollRef} 
-      style={{ maxHeight: 'calc(100vh - 10rem)', overflowY: 'auto' }}
+      style={{ minHeight: 'calc(100vh - 10rem)', maxHeight: 'calc(100vh - 10rem)', overflowY: 'auto' }}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
