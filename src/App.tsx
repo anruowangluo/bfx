@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
+import { KeepAlive, AliveScope } from 'react-activation'
 import Home from './pages/Home'
 import PromptDetail from './pages/PromptDetail'
 import CreatePrompt from './pages/CreatePrompt'
@@ -25,7 +26,11 @@ const AppContent = () => {
       <Navbar />
       <main className={`flex-grow ${!hideTabbar ? 'pb-20' : ''}`}>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={
+            <KeepAlive name="home" saveScrollPosition={true}>
+              <Home />
+            </KeepAlive>
+          } />
           <Route path="/prompt/:id" element={<PromptDetail />} />
           <Route path="/create" element={<CreatePrompt />} />
           <Route path="/profile" element={<Profile />} />
@@ -40,9 +45,11 @@ const AppContent = () => {
 
 function App() {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <AliveScope>
+      <Router>
+        <AppContent />
+      </Router>
+    </AliveScope>
   )
 }
 
