@@ -15,6 +15,8 @@ const Home = () => {
   const [loading, setLoading] = useState(true)
   const scrollRef = useRef<HTMLDivElement>(null)
   const scrollPositionRef = useRef(0)
+  const touchStartX = useRef(0)
+  const touchEndX = useRef(0)
 
   // Fetch data from API
   useEffect(() => {
@@ -102,8 +104,49 @@ const Home = () => {
     }
   }, [location.pathname, loading, prompts.length])
 
+  // 处理触摸开始事件
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+  }
+
+  // 处理触摸结束事件
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    touchEndX.current = e.changedTouches[0].clientX
+    handleSwipe()
+  }
+
+  // 处理滑动逻辑
+  const handleSwipe = () => {
+    const swipeThreshold = 50 // 滑动阈值
+    const diff = touchEndX.current - touchStartX.current
+
+    if (Math.abs(diff) > swipeThreshold) {
+      // 找到当前选中的分类索引
+      const categoryIds = ['all', ...categories.map(c => c.id)]
+      const currentIndex = categoryIds.indexOf(selectedCategory)
+      
+      if (diff > 0 && currentIndex > 0) {
+        // 向右滑动，切换到上一个分类
+        const prevCategory = categoryIds[currentIndex - 1]
+        setSelectedCategory(prevCategory)
+        sessionStorage.setItem('homeSelectedCategory', prevCategory)
+      } else if (diff < 0 && currentIndex < categoryIds.length - 1) {
+        // 向左滑动，切换到下一个分类
+        const nextCategory = categoryIds[currentIndex + 1]
+        setSelectedCategory(nextCategory)
+        sessionStorage.setItem('homeSelectedCategory', nextCategory)
+      }
+    }
+  }
+
   return (
-    <div className="container mx-auto px-4 py-4" ref={scrollRef} style={{ maxHeight: 'calc(100vh - 10rem)', overflowY: 'auto' }}>
+    <div 
+      className="container mx-auto px-4 py-4" 
+      ref={scrollRef} 
+      style={{ maxHeight: 'calc(100vh - 10rem)', overflowY: 'auto' }}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       {/* Categories */}
       <div className="mb-4 overflow-x-auto pb-2 -mx-4 px-4">
         <div className="flex space-x-3">
