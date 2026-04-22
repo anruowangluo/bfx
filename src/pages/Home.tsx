@@ -92,12 +92,9 @@ const Home = () => {
       const savedPosition = sessionStorage.getItem('homeScrollPosition')
       const position = savedPosition ? parseInt(savedPosition, 10) : 0
       
-      // 使用setTimeout确保DOM已经完全渲染后再设置滚动位置
-      setTimeout(() => {
-        if (scrollRef.current) {
-          scrollRef.current.scrollTop = position
-        }
-      }, 100)
+      // 直接设置滚动位置，不使用setTimeout
+      // 确保在DOM渲染后立即设置，避免视觉跳动
+      scrollRef.current.scrollTop = position
     }
   }, [location.pathname])
 
