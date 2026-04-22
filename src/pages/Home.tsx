@@ -193,7 +193,7 @@ const Home = () => {
           {/* Prompts List */}
           <div 
             key={selectedCategory} 
-            className={`grid grid-cols-2 gap-3 ${animDirection === 'left' ? 'animate-slide-in-left' : animDirection === 'right' ? 'animate-slide-in-right' : 'animate-fade-in'}`}
+            className={`grid grid-cols-2 gap-3 animate__animated ${animDirection === 'left' ? 'animate__slideInLeft' : animDirection === 'right' ? 'animate__slideInRight' : 'animate__fadeIn'}`}
           >
             {filteredPrompts.map((prompt) => (
               <Link
