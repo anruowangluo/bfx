@@ -87,7 +87,7 @@ const Home = () => {
 
   // 恢复滚动位置
   useEffect(() => {
-    if (location.pathname === '/') {
+    if (location.pathname === '/' && !loading && prompts.length > 0) {
       // 使用requestAnimationFrame确保DOM已经渲染完成
       requestAnimationFrame(() => {
         if (scrollRef.current) {
@@ -100,7 +100,7 @@ const Home = () => {
         }
       })
     }
-  }, [location.pathname])
+  }, [location.pathname, loading, prompts.length])
 
   return (
     <div className="container mx-auto px-4 py-4" ref={scrollRef} style={{ maxHeight: 'calc(100vh - 10rem)', overflowY: 'auto' }}>
